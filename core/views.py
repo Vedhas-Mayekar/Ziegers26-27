@@ -1,5 +1,6 @@
 """Views for the ZIEGERS 2026-27 landing page."""
-from django.http import HttpResponse
+from django.contrib import messages
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 
 # DeCipher Gaming operations — single DB, shared with the results dashboard
@@ -749,14 +750,26 @@ def results_page(request):
     casual walk-in log with inline status toggling — all drawn from the
     shared events database.
     """
-    # Staff toggle a session's status directly from the results board
+    # Results remain public, but changing an operational status is a staff-only
+    # action.  Previously any visitor could submit this form (or a malformed
+    # session id) and either alter a record or receive a 404 error page.
     if request.method == 'POST':
-        if request.POST.get('action') == 'toggle_status':
-            session = get_object_or_404(
-                CasualGameSession, pk=request.POST.get('session_id')
-            )
+        if request.POST.get('action') != 'toggle_status':
+            return HttpResponseBadRequest('Unsupported results action.')
+
+        if not request.user.is_staff:
+            messages.error(request, 'Sign in as a staff member to update a session.')
+            return redirect('core:results')
+
+        session_id = request.POST.get('session_id')
+        try:
+            session = CasualGameSession.objects.get(pk=session_id)
+        except (CasualGameSession.DoesNotExist, ValueError, TypeError):
+            messages.error(request, 'That session could not be found. Please refresh and try again.')
+        else:
             session.status = 'Completed' if session.status == 'Playing' else 'Playing'
-            session.save()
+            session.save(update_fields=['status'])
+            messages.success(request, f'{session.player_name}\'s session is now {session.status.lower()}.')
         return redirect('core:results')
 
     # Build tournament dossiers with prefetched relations for the board
