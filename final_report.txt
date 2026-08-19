@@ -1,0 +1,65 @@
+=== FILE-BYTE CHECKS ===
+footer credit (Designed by Karthik Vinod) in base.html: MISSING
+font-decipher still in casual_log.html: YES (BAD)
+typewriter-text in casual_log.html: YES (good)
+--- base.html footer (real bytes) ---
+<!-- FOOTER -->
+    <footer class="border-t border-noir-700 bg-noir-950 py-10 px-4 text-center text-xs typewriter-text text-parchment-400 space-y-3">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2 text-parchment-200">
+                <i data-lucide="shield" class="w-4 h-4 text-stamp-red"></i>
+                <span>ZIEGERS 2026-27 • Department of Computer Science</span>
+            </div>
+            <p>© 2026-27 ZIEGERS Bureau. Solve the Unsolved. All rights reserved.</p>
+        </div>
+    </footer>
+
+    
+
+=== HTTP STATUS (expect 200, except walkins=302 anonymous) ===
+  /results/                ->  200 
+  /events/                 ->  200 
+  /events/tournament/1/    ->  200 
+  /events/tournament/2/    ->  200 
+  /events/walkins/         ->  404 
+  /                        ->  200 
+  anonymous /events/walkins/ (no-redirect) -> 302 (expect 302)
+
+=== FOOTER CREDIT ON PAGES ===
+  /results/ footer credit: MISSING
+  /events/ footer credit: MISSING
+  /events/tournament/1/ footer credit: MISSING
+  /events/tournament/2/ footer credit: MISSING
+  / footer credit: MISSING
+
+=== STAFF LOGIN + /events/walkins/ ===
+login as admin: OK
+staff /events/walkins/ -> HTTP 200 (expect 200)
+  marker police-tape: OK
+  marker typewriter-text: OK
+  marker title-cinzel: OK
+  marker PRE-REGISTERED AGENTS: OK
+  marker REGISTER NEW WALK-IN OPERATOR: OK
+  marker Agent Vega: OK
+  marker Agent Reeves: OK
+  marker VR Gaming: OK
+  marker Walk-in: OK
+  marker Completed: MISSING
+  marker Active (Click to Complete): OK
+
+=== TOGGLE POST (results) ===
+csrf token: found; Vega session_id: 1
+before: Active=0, Completed=1
+after toggle: Active=0, Completed=2 (expect 0, 2)
+toggle result: OK (Vega Active->Completed)
+restore: Active=0, Completed=1 (expect 1, 1)
+
+=== FINAL: server started cleanly? ===
+  runserver.log tail: [19/Aug/2026 20:58:03] "GET /results/ HTTP/1.1" 200 32790
+[19/Aug/2026 20:58:03] "POST /results/ HTTP/1.1" 302 0
+[19/Aug/2026 20:58:03] "GET /results/ HTTP/1.1" 200 32838
+[19/Aug/2026 20:58:03] "GET /results/ HTTP/1.1" 200 32838
+[19/Aug/2026 20:58:03] "POST /results/ HTTP/1.1" 302 0
+[19/Aug/2026 20:58:03] "GET /results/ HTTP/1.1" 200 32790
+[19/Aug/2026 20:58:03] "GET /results/ HTTP/1.1" 200 32790
+

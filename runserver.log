@@ -11,3 +11,65 @@ Watching for file changes with StatReloader
 [19/Aug/2026 20:32:45] "GET /static/images/apple-touch-icon.png HTTP/1.1" 404 1895
 [19/Aug/2026 20:32:45] "GET /results/ HTTP/1.1" 200 32790
 [19/Aug/2026 20:32:50] "GET /static/images/apple-touch-icon.png HTTP/1.1" 404 1895
+C:\TY Project\Ziegers2026\Ziegers2026\settings.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+August 19, 2026 - 20:01:16
+Django version 6.0.6, using settings 'Ziegers2026.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/6.0/howto/deployment/
+Watching for file changes with StatReloader
+C:\TY Project\Ziegers2026\Ziegers2026\settings.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+August 19, 2026 - 20:49:27
+Django version 6.0.6, using settings 'Ziegers2026.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/6.0/howto/deployment/
+Watching for file changes with StatReloader
+C:\TY Project\Ziegers2026\Ziegers2026\settings.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+August 19, 2026 - 20:49:42
+Django version 6.0.6, using settings 'Ziegers2026.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/6.0/howto/deployment/
+Watching for file changes with StatReloader
+[19/Aug/2026 20:58:02] "GET /results/ HTTP/1.1" 200 32790
+[19/Aug/2026 20:58:02] "GET /events/ HTTP/1.1" 200 18717
+[19/Aug/2026 20:58:02] "GET /events/tournament/1/ HTTP/1.1" 200 18111
+[19/Aug/2026 20:58:02] "GET /events/tournament/2/ HTTP/1.1" 200 22336
+[19/Aug/2026 20:58:02] "GET /events/walkins/ HTTP/1.1" 302 0
+Not Found: /accounts/login/
+[19/Aug/2026 20:58:02] "GET /accounts/login/?next=/events/walkins/ HTTP/1.1" 404 3481
+[19/Aug/2026 20:58:02] "GET / HTTP/1.1" 200 65570
+[19/Aug/2026 20:58:02] "GET /events/walkins/ HTTP/1.1" 302 0
+[19/Aug/2026 20:58:02] "GET /results/ HTTP/1.1" 200 32790
+[19/Aug/2026 20:58:02] "GET /events/ HTTP/1.1" 200 18717
+[19/Aug/2026 20:58:02] "GET /events/tournament/1/ HTTP/1.1" 200 18111
+[19/Aug/2026 20:58:02] "GET /events/tournament/2/ HTTP/1.1" 200 22336
+[19/Aug/2026 20:58:02] "GET / HTTP/1.1" 200 65570
+[19/Aug/2026 20:58:02] "GET /admin/login/ HTTP/1.1" 200 4067
+[19/Aug/2026 20:58:03] "POST /admin/login/ HTTP/1.1" 302 0
+Not Found: /accounts/profile/
+[19/Aug/2026 20:58:03] "GET /accounts/profile/ HTTP/1.1" 404 3465
+[19/Aug/2026 20:58:03] "GET /events/walkins/ HTTP/1.1" 200 22073
+[19/Aug/2026 20:58:03] "GET /results/ HTTP/1.1" 200 32790
+[19/Aug/2026 20:58:03] "POST /results/ HTTP/1.1" 302 0
+[19/Aug/2026 20:58:03] "GET /results/ HTTP/1.1" 200 32838
+[19/Aug/2026 20:58:03] "GET /results/ HTTP/1.1" 200 32838
+[19/Aug/2026 20:58:03] "POST /results/ HTTP/1.1" 302 0
+[19/Aug/2026 20:58:03] "GET /results/ HTTP/1.1" 200 32790
+[19/Aug/2026 20:58:03] "GET /results/ HTTP/1.1" 200 32790
