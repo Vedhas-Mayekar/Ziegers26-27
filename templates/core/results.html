@@ -27,6 +27,12 @@
     </div>
     {% endif %}
 
+    {% if results_unavailable %}
+    <div class="mb-6 rounded-lg border border-stamp-gold/50 bg-stamp-gold/10 px-4 py-3 text-xs typewriter-text text-parchment-200" role="status">
+        Results are being prepared for publication. Please check back shortly.
+    </div>
+    {% endif %}
+
     <!-- Dashboard Masthead -->
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-noir-700 gap-4">
         <div>

@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.test import override_settings
 from django.test import TestCase
 from django.urls import reverse
 
@@ -47,3 +48,10 @@ class ResultsPageTests(TestCase):
         )
 
         self.assertRedirects(response, reverse('core:results'))
+
+    @override_settings(RESULTS_DATA_ENABLED=False)
+    def test_results_page_stays_available_when_hosted_database_is_not_configured(self):
+        response = self.client.get(reverse('core:results'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Results are being prepared for publication.')

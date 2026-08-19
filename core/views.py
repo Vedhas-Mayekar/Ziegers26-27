@@ -1,5 +1,6 @@
 """Views for the ZIEGERS 2026-27 landing page."""
 from django.contrib import messages
+from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -750,6 +751,16 @@ def results_page(request):
     casual walk-in log with inline status toggling — all drawn from the
     shared events database.
     """
+    # A Vercel deployment without a configured hosted database must not attempt
+    # to open the local SQLite file (the function filesystem is read-only).
+    if not settings.RESULTS_DATA_ENABLED:
+        return render(request, 'core/results.html', {
+            'page_title': 'Results | ZIEGERS 2026-27',
+            'tournaments_data': [],
+            'casual_sessions': [],
+            'results_unavailable': True,
+        })
+
     # Results remain public, but changing an operational status is a staff-only
     # action.  Previously any visitor could submit this form (or a malformed
     # session id) and either alter a record or receive a 404 error page.
