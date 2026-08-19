@@ -1,0 +1,145 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}{{ tournament.name }} | ZIEGERS 2026-27{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 lg:px-8 py-12">
+    <!-- Dossier Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 pb-4 border-b border-noir-700">
+        <div>
+            <span class="typewriter-text text-stamp-gold text-xs uppercase tracking-widest block mb-2">// CASE DOSSIER</span>
+            <div class="flex items-center gap-3 flex-wrap">
+                <h1 class="text-3xl md:text-5xl font-black title-cinzel text-white tracking-wider">{{ tournament.name }}</h1>
+                <span class="text-xs typewriter-text bg-stamp-red/10 text-stamp-red px-2.5 py-1 rounded border border-stamp-red/50">
+                    Format: {{ tournament.get_game_type_display }}
+                </span>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{% url 'events:index' %}" class="inline-flex items-center gap-2 px-3 py-2 bg-noir-800 hover:bg-stamp-red text-parchment-300 hover:text-white font-bold text-xs uppercase tracking-wider rounded border border-noir-600 hover:border-red-500 transition-all">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to HQ
+            </a>
+            <a href="{% url 'core:results' %}" class="inline-flex items-center gap-2 px-3 py-2 bg-noir-800 hover:bg-stamp-gold text-parchment-300 hover:text-white font-bold text-xs uppercase tracking-wider rounded border border-noir-600 transition-all">
+                <i data-lucide="trophy" class="w-4 h-4"></i> Results Board
+            </a>
+        </div>
+    </div>
+
+    <!-- 1v1 / Knockout Bracket View -->
+    {% if tournament.game_type == '1v1' %}
+    {% if matches_by_round %}
+    <div class="bg-dossier border border-noir-700 rounded-xl p-4 shadow-2xl" style="display: flex; gap: 20px; overflow-x: auto;">
+        {% for round_num, matches in matches_by_round.items %}
+        <div class="flex flex-col" style="min-width: 230px;">
+            <div class="text-center mb-3 pb-2 border-b border-red-900/50">
+                <h4 class="font-bold title-cinzel text-xl text-stamp-red mb-0">STAGE {{ round_num }}</h4>
+            </div>
+            {% for match in matches %}
+            <div class="bg-noir-900 border border-noir-700 rounded-lg p-3 mb-3">
+                <div class="text-parchment-400 font-mono text-xs mb-1">MATCH #{{ match.match_number }}</div>
+                <div class="font-mono text-white text-center">
+                    <strong class="text-parchment-200">{{ match.team1.team_name|default:"TBD / BYE" }}</strong>
+                </div>
+                <div class="text-stamp-red text-center my-1 text-xs font-bold">VS</div>
+                <div class="font-mono text-white text-center">
+                    <strong class="text-parchment-200">{{ match.team2.team_name|default:"TBD / BYE" }}</strong>
+                </div>
+                {% if match.winner %}
+                <div class="text-amber-400 font-mono text-xs mt-2 pt-1 border-t border-noir-700">
+                    🏆 VICTOR: {{ match.winner.team_name }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="p-4 bg-noir-800 border border-noir-700 text-parchment-300 font-mono rounded-lg">
+        No tournament bracket generated yet. Configure pairings in Django Admin.
+    </div>
+    {% endif %}
+
+    <!-- Battle Royale Points Table View -->
+    {% elif tournament.game_type == 'Battle Royale' %}
+    <div class="bg-dossier border border-noir-700 rounded-xl p-4 shadow-2xl">
+        <div class="flex justify-between items-center mb-3 pb-2 border-b border-noir-700 gap-2">
+            <h3 class="text-2xl font-black title-cinzel text-white">LEADERBOARD & OVERALL INTEL</h3>
+            <span class="text-xs text-parchment-400 typewriter-text">SCORED SQUADS</span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-center font-mono text-sm">
+                <thead>
+                    <tr class="border-b border-noir-700 text-parchment-400 text-xs uppercase tracking-wider">
+                        <th class="text-left pb-2">Rank</th>
+                        <th class="text-left pb-2">Squad Name</th>
+                        <th>Matches</th>
+                        <th>Intel</th>
+                        <th class="text-right pb-2">Total Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for team in teams|dictsortreversed:"total_br_points" %}
+                    <tr class="border-b border-noir-700/60">
+                        <td class="py-2">
+                            {% if forloop.counter == 1 %}
+                            <span class="typewriter-text text-xs bg-amber-200 text-noir-950 font-bold px-2 py-0.5 rounded">🥇 #1 TOP</span>
+                            {% elif forloop.counter == 2 %}
+                            <span class="typewriter-text text-xs bg-noir-800 text-parchment-300 font-bold px-2 py-0.5 rounded border border-noir-700">🥈 #2</span>
+                            {% elif forloop.counter == 3 %}
+                            <span class="typewriter-text text-xs text-amber-400 font-bold">🥉 #3</span>
+                            {% else %}
+                            <span class="text-parchment-400 text-xs font-mono">#{{ forloop.counter }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-left py-2">
+                            <strong class="text-lg text-white font-mono block">{{ team.team_name }}</strong>
+                            {% if team.leader_ign %}
+                            <small class="text-parchment-400 text-xs font-mono">Lead: {{ team.leader_ign }}</small>
+                            {% endif %}
+                        </td>
+                        <td class="py-2">
+                            <span class="bg-noir-800 text-parchment-300 border border-noir-700 px-2 py-0.5 rounded font-mono text-xs">{{ team.scores.count }}</span>
+                        </td>
+                        <td class="py-2">
+                            {% if team.scores.all %}
+                            <div class="flex flex-wrap gap-1 justify-center">
+                                {% for score in team.scores.all %}
+                                <span class="bg-noir-800 border border-noir-700 px-2 py-0.5 rounded text-xs">
+                                    M{{ score.match_number }}:
+                                    <span class="text-amber-400">{{ score.placement_points }} Place</span> +
+                                    <span class="text-stamp-red">{{ score.kill_points }} Kills</span> =
+                                    <strong class="text-white">{{ score.total_points }} pts</strong>
+                                </span>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <span class="text-parchment-400 text-xs">No entries scored yet</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-right py-2">
+                            <span class="bg-stamp-red/20 text-stamp-red text-base font-bold font-mono px-3 py-1 rounded">
+                                {{ team.total_br_points }} PTS
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-parchment-400 py-4">No squads registered in this dossier yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Dossier Footer CTA -->
+    <div class="mt-8 pt-4 border-t border-noir-700 flex justify-between items-center gap-3">
+        <a href="{% url 'events:index' %}" class="text-xs typewriter-text text-parchment-300 hover:text-stamp-gold flex items-center gap-1">
+            <i data-lucide="list" class="w-3 h-3"></i> All Arenas
+        </a>
+    </div>
+</div>
+{% endblock %}

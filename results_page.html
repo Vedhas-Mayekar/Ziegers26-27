@@ -1,0 +1,551 @@
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results | ZIEGERS 2026-27 — DeCipher</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Outfit:wght@300;400;500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Compiled Tailwind CSS (build via: npm run build:css) -->
+    <link rel="stylesheet" href="/static/css/tailwind-output.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+
+    <!-- Apple touch icons (optional for homescreen) -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/images/apple-touch-icon.png">
+
+    <!-- Web manifest (optional for PWA) -->
+    <link rel="manifest" href="/static/site.webmanifest">
+</head>
+<body class="relative min-h-screen selection:bg-stamp-red selection:text-white">
+
+    <!-- PRELOADER: ZIEGERS Logo Reveal (≈2s) -->
+    <div id="preloader" aria-hidden="true">
+        <div class="pl-logo">
+            <img src="/static/images/logo.png" alt="ZIEGERS 2026-27">
+        </div>
+    </div>
+
+    <!-- Flashlight Mode Overlay (Toggleable) -->
+    <div id="torch-overlay"></div>
+
+    <!-- Mouse Glow Overlay -->
+    <div id="mouse-glow"></div>
+
+    <!-- Background Investigation Theme Audio -->
+    <audio id="bg-audio" loop>
+        <source src="/static/audio/investigation-theme.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- TOP CONFIDENTIAL BANNER -->
+    <div class="police-tape py-1.5 font-extrabold text-[10px] sm:text-xs uppercase tracking-widest text-center shadow-lg relative z-50 flex justify-center items-center gap-2 sm:gap-4 whitespace-nowrap overflow-x-auto" style="color: #FF5722; text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,0.9);">
+        <span>⚠️ TOP SECRET // CONFIDENTIAL CASE FILES</span>
+        <span class="hidden sm:inline">• DEPARTMENT OF COMPUTER SCIENCE PRESENTS ZIEGERS 2026-27</span>
+        <span>⚠️ REGISTRATION ENDS 28TH AUGUST</span>
+    </div>
+
+    <!-- NAVIGATION BAR -->
+    <nav class="sticky top-0 z-40 bg-noir-900/90 backdrop-blur-md border-b border-noir-700/80 px-3 sm:px-4 lg:px-8 py-3 transition-all">
+        <div class="max-w-7xl mx-auto">
+            <!-- Top Row: Logo + Desktop Links + Compact Controls -->
+            <div class="flex items-center justify-between gap-2">
+                <!-- Brand Logo -->
+                <a href="#" class="flex items-center gap-3 group shrink-0">
+                    <img src="/static/images/logo.png" alt="ZIEGERS 2026-27" class="h-9 sm:h-10 w-auto object-contain transition-all duration-300">
+                </a>
+
+                <!-- Desktop Links -->
+                <div class="hidden md:flex items-center gap-5 text-[13px] font-medium tracking-wide">
+                    <a href="#cases" class="hover:text-stamp-red transition-colors flex items-center gap-1.5 whitespace-nowrap"><i data-lucide="folder-open" class="w-4 h-4 text-stamp-gold"></i> Open Cases</a>
+                    <a href="#codesprint" class="hover:text-stamp-red transition-colors flex items-center gap-1.5 whitespace-nowrap"><i data-lucide="code-2" class="w-4 h-4 text-stamp-gold"></i> CodeSprint '26</a>
+                    <a href="#evidence" class="hover:text-stamp-red transition-colors flex items-center gap-1.5 whitespace-nowrap"><i data-lucide="pin" class="w-4 h-4 text-stamp-gold"></i> Evidence Board</a>
+                    <a href="#instructions" class="hover:text-stamp-red transition-colors flex items-center gap-1.5 whitespace-nowrap"><i data-lucide="shield-alert" class="w-4 h-4 text-stamp-gold"></i> Protocols</a>
+                    <a href="/command-crew/" class="hover:text-stamp-red transition-colors flex items-center gap-1.5 whitespace-nowrap"><i data-lucide="users" class="w-4 h-4 text-stamp-gold"></i> Command Crew</a>
+                    <a href="/results/" class="hover:text-stamp-red transition-colors flex items-center gap-1.5 whitespace-nowrap"><i data-lucide="trophy" class="w-4 h-4 text-stamp-gold"></i> Results</a>
+                </div>
+
+                <!-- Compact Controls (labels hidden on mobile to save space) -->
+                <div class="flex items-center gap-1.5 sm:gap-2">
+                    <!-- Torch Mode Toggle Button (Torch OFF = dark mode by default, struck-through icon) -->
+                    <button id="torch-btn" onclick="toggleTorch()" title="Turn on the lights to solve the case" class="p-2 border border-stamp-gold/60 bg-noir-800 text-amber-300 rounded hover:border-stamp-red hover:text-stamp-red transition-all text-xs flex items-center gap-1.5 shrink-0">
+                        <i data-lucide="flashlight" class="w-4 h-4 line-through"></i>
+                        <span class="hidden sm:inline">Dark</span>
+                    </button>
+
+                    <!-- Audio FX Toggle -->
+                    <button id="audio-btn" onclick="toggleAudio()" title="Toggle Sound FX" class="p-2 border border-noir-600 bg-noir-800 text-parchment-200 rounded hover:border-stamp-gold hover:text-stamp-gold transition-all text-xs flex items-center gap-1.5 shrink-0">
+                        <i data-lucide="volume-2" id="audio-icon" class="w-4 h-4"></i>
+                    </button>
+
+                    <!-- CTA Button (Desktop only — mobile has Register in bottom bar) -->
+                    <a href="https://forms.gle/bDmxNrk2jL5XH2V99" target="_blank" rel="noopener noreferrer" class="hidden md:flex px-4 py-2 bg-stamp-red hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded border border-red-500/50 shadow-lg shadow-red-900/40 transition-all items-center gap-2 whitespace-nowrap">
+                        <i data-lucide="file-plus" class="w-4 h-4"></i> File Case / Register
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mobile Bottom Action Bar (replaces burger/drawer) -->
+            <div class="md:hidden flex items-stretch gap-1.5 mt-2.5 pt-2.5 border-t border-noir-700/80">
+                <a href="/command-crew/" class="flex-1 min-w-0 flex flex-col items-center justify-center gap-1 px-2 py-1.5 bg-noir-800 hover:bg-noir-700 border border-noir-600 rounded text-parchment-200 transition-all">
+                    <i data-lucide="users" class="w-4 h-4 text-stamp-gold shrink-0"></i>
+                    <span class="text-[9px] font-bold uppercase tracking-wider typewriter-text">Crew</span>
+                </a>
+                <a href="/results/" class="flex-1 min-w-0 flex flex-col items-center justify-center gap-1 px-2 py-1.5 bg-noir-800 hover:bg-noir-700 border border-noir-600 rounded text-parchment-200 transition-all">
+                    <i data-lucide="trophy" class="w-4 h-4 text-stamp-gold shrink-0"></i>
+                    <span class="text-[9px] font-bold uppercase tracking-wider typewriter-text">Results</span>
+                </a>
+                <a href="https://forms.gle/bDmxNrk2jL5XH2V99" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-0 flex flex-col items-center justify-center gap-1 px-2 py-1.5 bg-stamp-red hover:bg-red-700 border border-red-500/50 rounded text-white transition-all">
+                    <i data-lucide="file-plus" class="w-4 h-4 shrink-0"></i>
+                    <span class="text-[9px] font-bold uppercase tracking-wider typewriter-text">Register</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- DARK MODE WARNING BANNER (visible while dark/torch mode is active) -->
+    <div id="dark-mode-warning" class="bg-amber-950 border-b-2 border-amber-500 px-4 py-2 text-center relative z-[55]">
+        <p class="typewriter-text text-amber-300 text-xs sm:text-sm font-extrabold uppercase tracking-widest flex flex-wrap items-center justify-center gap-2">
+            <i data-lucide="triangle-alert" class="w-4 h-4 text-amber-400 shrink-0"></i>
+             Turn on the lights, to solve the case 
+            <i data-lucide="triangle-alert" class="w-4 h-4 text-amber-400 shrink-0"></i>
+        </p>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    
+<!-- GO BACK BAR -->
+<div class="bg-noir-900/90 backdrop-blur-md border-b border-noir-700/80 px-4 lg:px-8 py-3.5">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <a href="/" class="inline-flex items-center gap-2 px-4 py-2 bg-noir-800 hover:bg-stamp-red text-parchment-200 hover:text-white font-bold text-xs uppercase tracking-wider rounded border border-noir-600 hover:border-red-500 transition-all">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Go Back
+        </a>
+        <span class="text-xs typewriter-text text-stamp-gold tracking-widest hidden sm:inline">// CASE RESULTS BUREAU</span>
+    </div>
+</div>
+
+<!-- RESULTS DASHBOARD -->
+<div class="max-w-7xl mx-auto px-4 lg:px-8 py-12 min-h-[60vh]">
+
+    <!-- Dashboard Masthead -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-noir-700 gap-4">
+        <div>
+            <span class="stamp-mark px-3 py-1 text-xs font-bold uppercase typewriter-text">CONFIDENTIAL</span>
+            <h1 class="text-3xl sm:text-4xl font-black title-cinzel text-white mt-3 flex items-center gap-3">
+                <i data-lucide="trophy" class="w-8 h-8 text-stamp-gold"></i> OPERATIONS RESULTS
+            </h1>
+            <p class="text-xs text-parchment-400 typewriter-text mb-1">Live DeCipher Gaming standings — brackets, leaderboards & desk telemetry.</p>
+        </div>
+        <a href="/events/walkins/" class="inline-flex items-center gap-2 px-3 py-2 bg-noir-800 hover:bg-stamp-red text-parchment-300 hover:text-white font-bold text-xs uppercase tracking-wider rounded border border-noir-600 hover:border-red-500 transition-all">
+            <i data-lucide="clipboard-list" class="w-4 h-4"></i> Open Desk Log
+        </a>
+    </div>
+
+    <!-- Tournament Dossiers -->
+    
+    <div class="space-y-12">
+        
+        <div class="bg-dossier border border-noir-700 rounded-xl p-6 shadow-2xl">
+            <!-- Dossier Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 border-b border-noir-700 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="stamp-mark px-2 py-0.5 text-[10px] uppercase typewriter-text">CASE #1</span>
+                    <h2 class="text-2xl font-black title-cinzel text-white">WWE 2K SHOWDOWN</h2>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs typewriter-text bg-stamp-red/10 text-stamp-red px-2.5 py-1 rounded border border-stamp-red/50">1v1 Knockout</span>
+                    <a href="/events/tournament/1/" class="text-xs typewriter-text text-parchment-300 hover:text-stamp-gold flex items-center gap-1">Full Dossier <i data-lucide="arrow-right" class="w-3 h-3"></i></a>
+                </div>
+            </div>
+
+            <!-- 1v1 KNOCKOUT BRACKET -->
+            
+            
+            <div class="flex gap-4 overflow-x-auto py-2">
+                
+                <div class="flex flex-col" style="min-width: 230px;">
+                    <div class="text-center mb-3 pb-2 border-b border-red-900/50">
+                        <h4 class="font-bold title-cinzel text-lg text-stamp-red">STAGE 1</h4>
+                    </div>
+                    
+                    <div class="bg-noir-900 border border-noir-700 rounded-lg p-3 mb-3">
+                        <div class="text-parchment-400 font-mono text-xs mb-1">MATCH #1</div>
+                        <div class="font-mono text-white text-center">
+                            <strong>Alpha</strong>
+                        </div>
+                        <div class="text-stamp-red text-center my-1 text-xs font-bold">VS</div>
+                        <div class="font-mono text-white text-center">
+                            <strong>Bravo</strong>
+                        </div>
+                        
+                        <div class="text-amber-400 font-mono text-xs mt-2 pt-1 border-t border-noir-700">
+                            🏆 VICTOR: Alpha
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="bg-noir-900 border border-noir-700 rounded-lg p-3 mb-3">
+                        <div class="text-parchment-400 font-mono text-xs mb-1">MATCH #2</div>
+                        <div class="font-mono text-white text-center">
+                            <strong>Charlie</strong>
+                        </div>
+                        <div class="text-stamp-red text-center my-1 text-xs font-bold">VS</div>
+                        <div class="font-mono text-white text-center">
+                            <strong>Delta</strong>
+                        </div>
+                        
+                        <div class="text-amber-400 font-mono text-xs mt-2 pt-1 border-t border-noir-700">
+                            🏆 VICTOR: Charlie
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                
+                <div class="flex flex-col" style="min-width: 230px;">
+                    <div class="text-center mb-3 pb-2 border-b border-red-900/50">
+                        <h4 class="font-bold title-cinzel text-lg text-stamp-red">STAGE 2</h4>
+                    </div>
+                    
+                    <div class="bg-noir-900 border border-noir-700 rounded-lg p-3 mb-3">
+                        <div class="text-parchment-400 font-mono text-xs mb-1">MATCH #3</div>
+                        <div class="font-mono text-white text-center">
+                            <strong>Alpha</strong>
+                        </div>
+                        <div class="text-stamp-red text-center my-1 text-xs font-bold">VS</div>
+                        <div class="font-mono text-white text-center">
+                            <strong>Charlie</strong>
+                        </div>
+                        
+                        <div class="text-amber-400 font-mono text-xs mt-2 pt-1 border-t border-noir-700">
+                            🏆 VICTOR: Alpha
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                
+            </div>
+            
+
+            <!-- BATTLE ROYALE POINTS TABLE -->
+            
+        </div>
+        
+        <div class="bg-dossier border border-noir-700 rounded-xl p-6 shadow-2xl">
+            <!-- Dossier Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 border-b border-noir-700 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="stamp-mark px-2 py-0.5 text-[10px] uppercase typewriter-text">CASE #2</span>
+                    <h2 class="text-2xl font-black title-cinzel text-white">BGMI SQUAD CLASH</h2>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs typewriter-text bg-stamp-red/10 text-stamp-red px-2.5 py-1 rounded border border-stamp-red/50">Battle Royale Points</span>
+                    <a href="/events/tournament/2/" class="text-xs typewriter-text text-parchment-300 hover:text-stamp-gold flex items-center gap-1">Full Dossier <i data-lucide="arrow-right" class="w-3 h-3"></i></a>
+                </div>
+            </div>
+
+            <!-- 1v1 KNOCKOUT BRACKET -->
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-center font-mono text-sm">
+                    <thead>
+                        <tr class="border-b border-noir-700 text-parchment-400 text-xs uppercase tracking-wider">
+                            <th class="text-left pb-2">Rank</th>
+                            <th class="text-left pb-2">Squad</th>
+                            <th>Matches</th>
+                            <th>Intel</th>
+                            <th class="text-right pb-2">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr class="border-b border-noir-700/60">
+                            <td class="py-2">
+                                
+                                <span class="typewriter-text text-xs bg-amber-200 text-noir-950 font-bold px-2 py-0.5 rounded">🥇 #1</span>
+                                
+                            </td>
+                            <td class="text-left py-2">
+                                <strong class="text-white font-mono block">Squad One</strong>
+                                <small class="text-parchment-400 text-xs font-mono">Lead: P1</small>
+                            </td>
+                            <td class="py-2">
+                                <span class="bg-noir-800 text-parchment-300 border border-noir-700 px-2 py-0.5 rounded font-mono text-xs">2</span>
+                            </td>
+                            <td class="py-2">
+                                
+                                <div class="flex flex-wrap gap-1 justify-center">
+                                    
+                                    <span class="bg-noir-800 border border-noir-700 px-2 py-0.5 rounded text-xs">
+                                        M1: <span class="text-amber-400">15P</span> + <span class="text-stamp-red">8K</span> = <strong class="text-white">23</strong>
+                                    </span>
+                                    
+                                    <span class="bg-noir-800 border border-noir-700 px-2 py-0.5 rounded text-xs">
+                                        M2: <span class="text-amber-400">12P</span> + <span class="text-stamp-red">5K</span> = <strong class="text-white">17</strong>
+                                    </span>
+                                    
+                                </div>
+                                
+                            </td>
+                            <td class="text-right py-2">
+                                <span class="bg-stamp-red/20 text-stamp-red text-base font-bold font-mono px-3 py-1 rounded">40 PTS</span>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-noir-700/60">
+                            <td class="py-2">
+                                
+                                <span class="typewriter-text text-xs bg-noir-800 text-parchment-300 font-bold px-2 py-0.5 rounded">🥈 #2</span>
+                                
+                            </td>
+                            <td class="text-left py-2">
+                                <strong class="text-white font-mono block">Squad Two</strong>
+                                <small class="text-parchment-400 text-xs font-mono">Lead: P2</small>
+                            </td>
+                            <td class="py-2">
+                                <span class="bg-noir-800 text-parchment-300 border border-noir-700 px-2 py-0.5 rounded font-mono text-xs">1</span>
+                            </td>
+                            <td class="py-2">
+                                
+                                <div class="flex flex-wrap gap-1 justify-center">
+                                    
+                                    <span class="bg-noir-800 border border-noir-700 px-2 py-0.5 rounded text-xs">
+                                        M1: <span class="text-amber-400">10P</span> + <span class="text-stamp-red">12K</span> = <strong class="text-white">22</strong>
+                                    </span>
+                                    
+                                </div>
+                                
+                            </td>
+                            <td class="text-right py-2">
+                                <span class="bg-stamp-red/20 text-stamp-red text-base font-bold font-mono px-3 py-1 rounded">22 PTS</span>
+                            </td>
+                        </tr>
+                        
+                        <tr class="border-b border-noir-700/60">
+                            <td class="py-2">
+                                
+                                <span class="typewriter-text text-xs text-amber-400 font-bold">🥉 #3</span>
+                                
+                            </td>
+                            <td class="text-left py-2">
+                                <strong class="text-white font-mono block">Squad Three</strong>
+                                <small class="text-parchment-400 text-xs font-mono">Lead: P3</small>
+                            </td>
+                            <td class="py-2">
+                                <span class="bg-noir-800 text-parchment-300 border border-noir-700 px-2 py-0.5 rounded font-mono text-xs">1</span>
+                            </td>
+                            <td class="py-2">
+                                
+                                <div class="flex flex-wrap gap-1 justify-center">
+                                    
+                                    <span class="bg-noir-800 border border-noir-700 px-2 py-0.5 rounded text-xs">
+                                        M1: <span class="text-amber-400">5P</span> + <span class="text-stamp-red">3K</span> = <strong class="text-white">8</strong>
+                                    </span>
+                                    
+                                </div>
+                                
+                            </td>
+                            <td class="text-right py-2">
+                                <span class="bg-stamp-red/20 text-stamp-red text-base font-bold font-mono px-3 py-1 rounded">8 PTS</span>
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+        
+        <div class="bg-dossier border border-noir-700 rounded-xl p-6 shadow-2xl">
+            <!-- Dossier Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 border-b border-noir-700 pb-3">
+                <div class="flex items-center gap-3">
+                    <span class="stamp-mark px-2 py-0.5 text-[10px] uppercase typewriter-text">CASE #3</span>
+                    <h2 class="text-2xl font-black title-cinzel text-white">TECHMANIA MINI-GAMES</h2>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs typewriter-text bg-stamp-red/10 text-stamp-red px-2.5 py-1 rounded border border-stamp-red/50">1v1 Knockout</span>
+                    <a href="/events/tournament/3/" class="text-xs typewriter-text text-parchment-300 hover:text-stamp-gold flex items-center gap-1">Full Dossier <i data-lucide="arrow-right" class="w-3 h-3"></i></a>
+                </div>
+            </div>
+
+            <!-- 1v1 KNOCKOUT BRACKET -->
+            
+            
+            <div class="p-4 bg-noir-800 border border-noir-700 text-parchment-300 font-mono rounded-lg">
+                No bracket pairings generated yet. Configure in Django Admin.
+            </div>
+            
+
+            <!-- BATTLE ROYALE POINTS TABLE -->
+            
+        </div>
+        
+    </div>
+    
+
+    <!-- Casual Walk-in Log -->
+    <div class="mt-12 bg-dossier border border-noir-700 rounded-xl p-6 shadow-2xl">
+        <div class="flex items-end justify-between mb-4 border-b border-noir-700 pb-3 gap-2">
+            <h2 class="text-2xl font-black title-cinzel text-white flex items-center gap-2">
+                <i data-lucide="clipboard-list" class="w-6 h-6 text-stamp-red"></i> WALK-IN OPERATIONAL LOG
+            </h2>
+            <span class="text-xs typewriter-text text-parchment-400">CASUAL SESSIONS • LIVE TELEMETRY</span>
+        </div>
+
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-center font-mono text-sm">
+                <thead>
+                    <tr class="border-b border-noir-700 text-parchment-400 text-xs uppercase tracking-wider">
+                        <th class="text-left pb-2">Operator</th>
+                        <th class="text-left pb-2">Zone</th>
+                        <th>Entry</th>
+                        <th>Check-in</th>
+                        <th>Status (Toggle)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr class="border-b border-noir-700/50">
+                        <td class="text-left py-2 font-bold text-white">Agent Reeves</td>
+                        <td class="py-2">
+                            <span class="text-xs typewriter-text bg-noir-800 text-stamp-red px-2 py-0.5 rounded border border-noir-700">VR Gaming</span>
+                        </td>
+                        <td class="py-2">
+                            
+                            <span class="typewriter-text text-xs text-stamp-gold">Pre-registered</span>
+                            
+                        </td>
+                        <td class="text-parchment-400 text-xs">02:26 PM - Aug 19</td>
+                        <td class="py-2">
+                            <form method="POST" action="/results/" class="inline-flex">
+                                <input type="hidden" name="csrfmiddlewaretoken" value="cgpVVAl0hqqCEB9cbX0kgoRzoLLNKCwGfMEE7szycyTjhcsOBnWeBnpLD59HvGrw">
+                                <input type="hidden" name="action" value="toggle_status">
+                                <input type="hidden" name="session_id" value="2">
+                                
+                                <button type="submit" class="px-3 py-1.5 bg-noir-800 hover:bg-stamp-gold text-parchment-300 hover:text-white font-bold text-xs uppercase tracking-wider rounded border border-noir-700 transition-all">✓ Completed</button>
+                                
+                            </form>
+                        </td>
+                    </tr>
+                    
+                    <tr class="border-b border-noir-700/50">
+                        <td class="text-left py-2 font-bold text-white">Agent Vega</td>
+                        <td class="py-2">
+                            <span class="text-xs typewriter-text bg-noir-800 text-stamp-red px-2 py-0.5 rounded border border-noir-700">VR Gaming</span>
+                        </td>
+                        <td class="py-2">
+                            
+                            <span class="typewriter-text text-xs text-parchment-400">Walk-in</span>
+                            
+                        </td>
+                        <td class="text-parchment-400 text-xs">02:26 PM - Aug 19</td>
+                        <td class="py-2">
+                            <form method="POST" action="/results/" class="inline-flex">
+                                <input type="hidden" name="csrfmiddlewaretoken" value="cgpVVAl0hqqCEB9cbX0kgoRzoLLNKCwGfMEE7szycyTjhcsOBnWeBnpLD59HvGrw">
+                                <input type="hidden" name="action" value="toggle_status">
+                                <input type="hidden" name="session_id" value="1">
+                                
+                                <button type="submit" class="px-3 py-1.5 bg-stamp-red hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider rounded transition-all">● Active</button>
+                                
+                            </form>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+
+
+    <!-- FOOTER -->
+    <footer class="border-t border-noir-700 bg-noir-950 py-10 px-4 text-center text-xs typewriter-text text-parchment-400 space-y-3">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2 text-parchment-200">
+                <i data-lucide="shield" class="w-4 h-4 text-stamp-red"></i>
+                <span>ZIEGERS 2026-27 • Department of Computer Science</span>
+            </div>
+            <p>© 2026-27 ZIEGERS Bureau. Solve the Unsolved. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- MODAL: CASE DOSSIER DETAIL -->
+    <div id="case-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-dossier border-2 border-noir-600 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl space-y-6">
+            <!-- Close Button -->
+            <button onclick="closeCaseModal()" class="absolute top-4 right-4 p-2 text-parchment-400 hover:text-stamp-red text-xs typewriter-text border border-noir-700 rounded">
+                [CLOSE ✕]
+            </button>
+
+            <!-- Dynamic Content Container -->
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- MODAL: QUICK REGISTRATION FORM -->
+    <div id="register-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-noir-900 border-2 border-stamp-red rounded-xl max-w-lg w-full p-6 relative shadow-2xl space-y-6">
+
+            <button onclick="closeRegisterModal()" class="absolute top-4 right-4 p-2 text-parchment-400 hover:text-stamp-red text-xs typewriter-text border border-noir-700 rounded">
+                [CANCEL ✕]
+            </button>
+
+            <div class="space-y-1">
+                <span class="stamp-mark px-2 py-0.5 text-[10px] uppercase typewriter-text">CASE REGISTRATION BUREAU</span>
+                <h3 id="reg-event-title" class="text-2xl font-bold title-cinzel text-white">FILE CASE ENTRY</h3>
+                <p class="text-xs text-parchment-400">Complete the form to obtain your official Case Ticket.</p>
+            </div>
+
+            <form onsubmit="handleRegistrationSubmit(event)" class="space-y-4 text-xs typewriter-text">
+                <input type="hidden" name="csrfmiddlewaretoken" value="cgpVVAl0hqqCEB9cbX0kgoRzoLLNKCwGfMEE7szycyTjhcsOBnWeBnpLD59HvGrw">
+                <div>
+                    <label class="block text-parchment-300 mb-1">Lead Detective / Student Name *</label>
+                    <input type="text" id="reg-name" required placeholder="e.g. Rahul Sharma" class="w-full bg-noir-950 border border-noir-700 rounded p-2.5 text-white focus:border-stamp-red outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-parchment-300 mb-1">Contact Phone *</label>
+                        <input type="tel" id="reg-phone" required placeholder="10 Digit Mobile" class="w-full bg-noir-950 border border-noir-700 rounded p-2.5 text-white focus:border-stamp-red outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-parchment-300 mb-1">College Name *</label>
+                        <input type="text" id="reg-college" required placeholder="College Campus" class="w-full bg-noir-950 border border-noir-700 rounded p-2.5 text-white focus:border-stamp-red outline-none">
+                    </div>
+                </div>
+
+                <div class="bg-noir-950 p-3 rounded border border-noir-700 flex justify-between items-center text-sm">
+                    <span class="text-parchment-300">Total Entry Fee:</span>
+                    <strong id="reg-fee-display" class="text-stamp-gold text-lg font-mono font-bold">₹0</strong>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-stamp-red hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider rounded border border-red-500 transition-all shadow-lg">
+                    SUBMIT & GENERATE CASE TOKEN
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Serialized case data for client-side modal rendering -->
+    
+    <script id="case-details-data" type="application/json">""</script>
+    
+
+    <script src="/static/js/preloader.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

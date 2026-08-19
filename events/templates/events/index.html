@@ -1,0 +1,64 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Gaming Operations | ZIEGERS 2026-27{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 lg:px-8 py-12">
+    <!-- Desk Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-noir-700 gap-4">
+        <div>
+            <span class="typewriter-text text-stamp-gold text-xs uppercase tracking-widest block mb-2">// GAMING OPERATIONS DESK</span>
+            <h1 class="text-3xl sm:text-4xl font-black title-cinzel text-white flex items-center gap-3">
+                <i data-lucide="gamepad-2" class="w-8 h-8 text-stamp-red"></i> ACTIVE CASE FILES
+            </h1>
+            <p class="text-xs text-parchment-400 typewriter-text max-w-xl">
+                Analyze brackets, decode match stats, and track live tournament scores.
+                Every move is logged in the case file.
+            </p>
+        </div>
+        <div class="text-right">
+            <span class="typewriter-text text-xs text-parchment-300 block">{{ tournaments.count }} ARENA(S) OPEN</span>
+            <span class="typewriter-text text-xs text-parchment-400 block">{{ casual_count }} CASUAL SESSIONS</span>
+        </div>
+    </div>
+
+    <!-- Tournament Cards -->
+    {% if tournaments %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for t in tournaments %}
+        <div class="relative bg-dossier border border-noir-700 rounded-xl p-6 flex flex-col justify-between shadow-2xl group hover:border-stamp-red transition-all duration-300">
+            <div class="absolute -top-3 -right-3 w-16 h-16 bg-stamp-red/10 rounded-full blur-lg pointer-events-none"></div>
+            <div class="relative z-10">
+                <div class="flex items-start justify-between mb-4">
+                    <span class="typewriter-text text-xs text-stamp-gold bg-noir-900 px-2.5 py-1 rounded border border-noir-700">
+                        CASE #{{ t.id }} • {{ t.get_game_type_display }}
+                    </span>
+                </div>
+                <h3 class="text-2xl font-black title-cinzel text-white group-hover:text-stamp-red transition-colors mb-2">{{ t.name }}</h3>
+                <p class="text-xs text-parchment-300 typewriter-text leading-relaxed">
+                    {{ t.get_game_type_display }} tournament dossier. Access bracket pairings and live scores below.
+                </p>
+            </div>
+            <div class="relative z-10 mt-5">
+                <a href="{% url 'events:tournament_detail' t.id %}"
+                   class="w-full py-2.5 bg-stamp-red hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider rounded border border-red-500 transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="search-code" class="w-4 h-4"></i> ACCESS INTEL & SCORES →
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-16 bg-dossier border border-noir-700 rounded-xl shadow-2xl">
+        <div class="w-20 h-20 bg-stamp-gold/10 text-stamp-gold rounded-full flex items-center justify-center mx-auto border-2 border-stamp-gold/40 mb-4">
+            <i data-lucide="trophy" class="w-10 h-10"></i>
+        </div>
+        <span class="typewriter-text text-stamp-gold text-xs uppercase tracking-widest block mb-2">// NO ACTIVE CASE FILES</span>
+        <p class="text-xs text-parchment-400 typewriter-text">
+            No tournaments are currently open. Check back when the next arena phase is unlocked.
+        </p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+/* ============================================================
+   ZIEGERS 2026-27 | DeCipher — Tailwind Input
+   Compiled via: npm run build:css
+   ============================================================ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base body styling (same as style.css) */
+@layer base {
+  body {
+    @apply bg-noir-950 text-parchment-200 font-sans;
+    overflow-x: hidden;
+  }
+}

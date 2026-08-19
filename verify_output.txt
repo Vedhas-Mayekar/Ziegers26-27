@@ -1,0 +1,45 @@
+OK fetch /results/ (32739 bytes)
+OK fetch /events/ (18682 bytes)
+OK fetch /events/tournament/1/ (18079 bytes)
+OK fetch /events/tournament/2/ (22304 bytes)
+=== THEME MARKERS ===
+[results.html]
+  OK   police-tape
+  OK   stamp-mark
+  OK   typewriter-text
+  OK   title-cinzel
+  OK   bg-noir-950
+  OK   shadow-2xl
+  OK   bg-dossier
+  OK   border-noir-700
+[events_index.html]
+  OK   police-tape
+  OK   typewriter-text
+  OK   title-cinzel
+  OK   ACTIVE CASE FILES
+  OK   CASE #
+[tournament1.html]
+  OK   police-tape
+  OK   typewriter-text
+  OK   STAGE 1
+  OK   STAGE 2
+  OK   VICTOR
+[tournament2.html]
+  OK   police-tape
+  OK   typewriter-text
+  OK   LEADERBOARD
+  OK   Squad One
+  OK   Squad Three
+  OK   PTS
+=== LIVE DATA ===
+[results.html]
+  OK   WWE 2K SHOWDOWN
+  OK   Alpha
+  OK   VS
+  OK   VICTOR: Alpha
+  OK   BGMI SQUAD CLASH
+  OK   Squad One
+  OK   Squad Three
+  OK   Agent Vega
+  OK   Walk-in
+  OK   Completed

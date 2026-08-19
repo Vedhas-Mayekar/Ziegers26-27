@@ -1,0 +1,131 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<style>
+    .bracket-container {
+        display: flex;
+        gap: 30px;
+        overflow-x: auto;
+        padding: 20px;
+        background: #0f172a;
+        border-radius: 8px;
+        color: white;
+    }
+
+    .bracket-round {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        min-width: 220px;
+    }
+
+    .match-box {
+        background: #1e293b;
+        border: 2px solid #334155;
+        border-radius: 6px;
+        padding: 10px;
+        margin: 15px 0;
+        position: relative;
+    }
+
+        .match-box select {
+            width: 100%;
+            background: #0f172a;
+            color: #f8fafc;
+            border: 1px solid #475569;
+            padding: 4px;
+            margin: 3px 0;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+    .winner-select {
+        border-color: #22c55e !important;
+        color: #4ade80 !important;
+        font-weight: bold;
+    }
+</style>
+
+<div style="padding: 10px;">
+    <h2>✏️ Visual Bracket Editor (Admin Panel)</h2>
+
+    <form method="GET" style="margin-bottom: 20px;">
+        <label><b>Select Tournament to Edit Bracket:</b></label>
+        <select name="tournament_id" onchange="this.form.submit()" style="padding: 8px; border-radius: 4px;">
+            <option value="">-- Select 1v1 Tournament --</option>
+            {% for t in tournaments %}
+            <option value="{{ t.id }}" {% if selected_tournament and selected_tournament.id == t.id %}selected{% endif %}>{{ t.name }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    {% if selected_tournament %}
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="tournament_id" value="{{ selected_tournament.id }}">
+
+        <div style="margin-bottom: 20px; display: flex; gap: 15px; align-items: center;">
+            <button type="submit" name="save_bracket" style="background: #22c55e; color: white; padding: 10px 24px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                💾 Save Bracket Selections
+            </button>
+
+            <div style="border-left: 1px solid #334155; padding-left: 15px; display: flex; gap: 8px; align-items: center;">
+                <label style="font-size: 13px; color: #94a3b8;"><b>Bracket Size:</b></label>
+                <select name="bracket_size" style="padding: 6px; border-radius: 4px; background: #1e293b; color: white; border: 1px solid #475569;">
+                    <option value="32" selected>32 Players (5 Rounds - FIFA / FC25)</option>
+                    <option value="16">16 Players (4 Rounds)</option>
+                    <option value="64">64 Players (6 Rounds)</option>
+                </select>
+                <button type="submit" name="reset_bracket" style="background: #ef4444; color: white; padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;" onclick="return confirm('This will reset current match assignments. Continue?')">
+                    🔄 Generate Slots
+                </button>
+            </div>
+        </div>
+
+        <div class="bracket-container">
+            {% for round_num, matches in matches_by_round.items %}
+            <div class="bracket-round">
+                <h3 style="text-align: center; color: #818cf8; text-transform: uppercase; font-size: 14px;">
+                    {% if forloop.last %}🏆 Final{% else %}Round {{ round_num }}{% endif %}
+                </h3>
+
+                {% for m in matches %}
+                <div class="match-box">
+                    <span style="font-size: 10px; color: #94a3b8; display: block; margin-bottom: 4px;">Match {{ m.match_number }} ({{ m.bracket_side }})</span>
+
+                    <select name="match_{{ m.id }}_team1">
+                        <option value="">-- Select Team 1 / BYE --</option>
+                        <option value="BYE" {% if m.is_bye %}selected{% endif %}>[ BYE Slot ]</option>
+                        {% for team in teams %}
+                        <option value="{{ team.id }}" {% if m.team1_id == team.id %}selected{% endif %}>{{ team.team_name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <div style="text-align: center; font-size: 10px; color: #64748b; font-weight: bold;">VS</div>
+
+                    <select name="match_{{ m.id }}_team2">
+                        <option value="">-- Select Team 2 / BYE --</option>
+                        <option value="BYE" {% if m.is_bye %}selected{% endif %}>[ BYE Slot ]</option>
+                        {% for team in teams %}
+                        <option value="{{ team.id }}" {% if m.team2_id == team.id %}selected{% endif %}>{{ team.team_name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <div style="margin-top: 6px; border-top: 1px solid #334155; padding-top: 4px;">
+                        <span style="font-size: 10px; color: #4ade80;">Winner (Advances):</span>
+                        <select name="match_{{ m.id }}_winner" class="winner-select">
+                            <option value="">-- Select Winner --</option>
+                            {% for team in teams %}
+                            <option value="{{ team.id }}" {% if m.winner_id == team.id %}selected{% endif %}>{{ team.team_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

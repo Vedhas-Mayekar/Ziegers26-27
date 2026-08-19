@@ -1,0 +1,420 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<header class="relative flex min-h-[calc(100vh-96px)] flex-col justify-center pt-8 pb-2 md:pt-12 px-4 overflow-hidden border-b border-noir-700">
+    <!-- Background Graphic Elements -->
+    <div class="absolute inset-0 bg-grunge-pattern opacity-60"></div>
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-stamp-red/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-5xl mx-auto relative z-10 text-center">
+
+        <!-- Confidential Stamp -->
+        <div class="mb-6 inline-block">
+            <span class="stamp-mark px-4 py-1.5 text-xs sm:text-sm font-extrabold uppercase tracking-widest typewriter-text">
+                UTKARSHA PRESENTS • CASE FILE #2026-27
+            </span>
+        </div>
+
+        <!-- Main Heading (Hero Logo Image) -->
+        <div class="mb-4 flex justify-center">
+            <img src="{% static 'images/hero.png' %}" alt="ZIEGERS: DeCipher" class="max-h-[150px] sm:max-h-[200px] md:max-h-[260px] max-w-full object-contain drop-shadow-md">
+        </div>
+
+        <!-- Tagline with typewriter feel -->
+        <p class="typewriter-text text-stamp-gold text-lg sm:text-2xl font-bold tracking-wider mb-6">
+            "CRACK THE CODE. CLOSE THE CASE."
+        </p>
+
+        <p class="text-parchment-300 max-w-2xl mx-auto text-sm sm:text-base font-light leading-relaxed mb-10">
+            The Department of Computer Science summons all detectives, coders, gamers, and tacticians. Enter the investigation room, unravel complex puzzles, battle in high-stakes esports, and claim victory.
+        </p>
+
+        <!-- Key Info Stat Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-10 text-left">
+            {% for stat in hero_stats %}
+            <div class="bg-noir-900/80 border border-noir-700 p-4 rounded-lg backdrop-blur shadow">
+                <span class="block text-xs text-parchment-400 typewriter-text uppercase">{{ stat.label }}</span>
+                <span class="text-2xl font-bold text-white title-cinzel flex items-center gap-2">
+                    <i data-lucide="{{ stat.icon }}" class="w-5 h-5 {{ stat.color }}"></i> {{ stat.value }}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- CTA Action buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-4">
+            <a href="#cases" class="px-8 py-3.5 bg-stamp-red hover:bg-red-700 text-white font-extrabold text-sm uppercase tracking-widest rounded border border-red-500 shadow-xl shadow-red-950/80 transition-all flex items-center gap-3 group">
+                <span>EXPLORE OPEN CASES</span>
+                <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+            </a>
+            <a href="#codesprint" class="px-8 py-3.5 bg-noir-800 hover:bg-noir-700 text-parchment-200 font-bold text-sm uppercase tracking-widest rounded border border-stamp-gold/50 transition-all flex items-center gap-2">
+                <i data-lucide="terminal" class="w-4 h-4 text-stamp-gold"></i>
+                <span>CODESPRINT HACKATHON</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- MAIN CONTENT CONTAINER -->
+<main class="max-w-7xl mx-auto px-4 lg:px-8 py-16 space-y-24">
+
+    <!-- SECTION: OPEN CASES (EVENTS GRID) -->
+    <section id="cases" class="scroll-mt-24">
+
+        <!-- Section Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-noir-700 gap-4">
+            <div>
+                <span class="typewriter-text text-stamp-gold text-xs uppercase tracking-widest block mb-1">// CONFIDENTIAL INVESTIGATIONS</span>
+                <h2 class="text-3xl sm:text-4xl font-black title-cinzel text-white flex items-center gap-3">
+                    <i data-lucide="briefcase" class="w-8 h-8 text-stamp-red"></i> OPEN CASE DOSSIERS
+                </h2>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="flex items-center gap-2 bg-noir-900 p-1.5 rounded-lg border border-noir-700 text-xs typewriter-text max-w-full overflow-x-auto">
+                <button onclick="filterCases('all')" id="tab-all" class="filter-tab px-3.5 py-1.5 rounded bg-stamp-red text-white font-bold transition-all whitespace-nowrap">ALL CASES</button>
+                <button onclick="filterCases('day1')" id="tab-day1" class="filter-tab px-3.5 py-1.5 rounded text-parchment-300 hover:text-white transition-all whitespace-nowrap">DAY 1 (ESPORTS & GAMES)</button>
+                <button onclick="filterCases('day2')" id="tab-day2" class="filter-tab px-3.5 py-1.5 rounded text-parchment-300 hover:text-white transition-all whitespace-nowrap">DAY 2 (HACKATHON & HUNT)</button>
+            </div>
+        </div>
+
+        <!-- Event Cards Grid -->
+        <div id="cases-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            {% for event in events %}
+                <!-- CASE {{ event.number }}: {{ event.name }} -->
+                {% if event.number == '07' %}
+                <!-- CODESPRINT 2026 (DAY 2 FLAGSHIP) -->
+                <div class="case-item {{ event.day }} crime-card bg-dossier border-2 border-stamp-gold/60 rounded-lg p-6 relative flex flex-col justify-between overflow-hidden group md:col-span-2 lg:col-span-2">
+                    <div class="absolute top-0 right-0 bg-stamp-gold text-black font-extrabold text-[10px] uppercase tracking-widest px-3 py-1 typewriter-text">
+                        ★ FLAGSHIP DAY 2 HACKATHON
+                    </div>
+                    <div>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                            <div>
+                                <span class="typewriter-text text-xs text-stamp-gold bg-noir-900 px-2.5 py-1 rounded border border-noir-700">CASE #{{ event.number }} • DAY 2</span>
+                                <h3 class="text-3xl font-black title-cinzel text-white mt-2 group-hover:text-stamp-gold transition-colors">{{ event.name }}</h3>
+                            </div>
+                            <span class="typewriter-text text-sm bg-amber-950 text-amber-300 font-extrabold px-3 py-1.5 rounded border border-amber-500 self-start sm:self-auto">{{ event.fee }}</span>
+                        </div>
+
+                        <p class="text-xs sm:text-sm text-parchment-200 leading-relaxed mb-6">
+                            {{ event.tagline|safe }}
+                        </p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs typewriter-text text-parchment-300 bg-noir-900/90 p-3 rounded border border-noir-700 mb-6">
+                            {% for icon, label in event.metadata %}
+                            <div class="flex items-center gap-2"><i data-lucide="{{ icon }}" class="w-4 h-4 text-stamp-gold"></i> {{ label }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-center gap-3">
+                        <button onclick="openCaseModal('{{ event.key }}')" class="w-full sm:w-1/2 py-3 bg-stamp-gold hover:bg-amber-600 text-black font-extrabold text-xs uppercase tracking-wider rounded transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="terminal" class="w-4 h-4"></i> FULL HACKATHON DOSSIER
+                        </button>
+                        <a href="https://forms.gle/bDmxNrk2jL5XH2V99" target="_blank" rel="noopener noreferrer" class="w-full sm:w-1/2 py-3 bg-stamp-red hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider rounded border border-red-500 transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="rocket" class="w-4 h-4"></i> REGISTER TEAM (₹449)
+                        </a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="case-item {{ event.day }} crime-card bg-dossier border border-noir-700 rounded-lg p-6 relative flex flex-col justify-between overflow-hidden group">
+                    <div class="absolute -top-3 -right-3 w-16 h-16 bg-stamp-red/10 rounded-full blur-lg"></div>
+                    <div>
+                        <!-- Header & Badge -->
+                        <div class="flex items-start justify-between mb-4">
+                            <div>
+                                <span class="typewriter-text text-xs text-stamp-gold bg-noir-900 px-2.5 py-1 rounded border border-noir-700">CASE #{{ event.number }} • DAY {% if event.day == 'day1' %}1{% else %}2{% endif %}</span>
+                                <h3 class="text-2xl font-bold title-cinzel text-white mt-2 group-hover:text-stamp-red transition-colors">{{ event.name }}</h3>
+                            </div>
+                            <span class="typewriter-text text-xs bg-red-950/80 text-red-400 font-bold px-2.5 py-1 rounded border border-red-800">{{ event.fee }}</span>
+                        </div>
+
+                        <p class="text-xs text-parchment-300 leading-relaxed mb-6">
+                            {{ event.tagline }}
+                        </p>
+
+                        <!-- Fast Metadata -->
+                        <div class="space-y-2 text-xs typewriter-text text-parchment-400 border-t border-b border-noir-700/60 py-3 mb-6">
+                            {% for icon, label in event.metadata %}
+                            <div class="flex items-center gap-2"><i data-lucide="{{ icon }}" class="w-3.5 h-3.5 text-stamp-gold"></i> {{ label }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <button onclick="openCaseModal('{{ event.key }}')" class="w-full py-2.5 bg-noir-800 hover:bg-stamp-red text-parchment-200 hover:text-white font-bold text-xs uppercase tracking-wider rounded border border-noir-600 hover:border-red-500 transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="search-code" class="w-4 h-4"></i> INVESTIGATE DOSSIER
+                    </button>
+                </div>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </section>
+
+    <!-- SECTION: CODESPRINT SPOTLIGHT (DAY 2 FEATURE) -->
+    <section id="codesprint" class="scroll-mt-24 bg-noir-900 border border-noir-700 rounded-xl p-8 relative overflow-hidden">
+        <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-stamp-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+            <div class="lg:col-span-7 space-y-4">
+                <span class="typewriter-text text-xs text-stamp-gold uppercase tracking-widest bg-noir-800 px-3 py-1 rounded border border-noir-600 inline-block">
+                    💻 CASE 07 HIGHLIGHT • DAY 2 HACKATHON
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-black title-cinzel text-white">
+                    CODESPRINT 2026: VIBE CODING REVOLUTION
+                </h2>
+                <p class="text-parchment-300 text-sm leading-relaxed">
+                    Are you ready to build high-impact applications under pressure? CodeSprint 2026 introduces 5 hours of intensive development where teams can leverage AI code generators, Git repositories, and modern frameworks to solve real challenges.
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 text-xs typewriter-text text-parchment-200">
+                    <div class="p-3 bg-noir-950 rounded border border-noir-700 flex items-start gap-3">
+                        <i data-lucide="terminal" class="w-5 h-5 text-stamp-gold shrink-0 mt-0.5"></i>
+                        <div>
+                            <strong class="text-white block">AI & Vibe Coding Allowed</strong>
+                            Full freedom to use GitHub Copilot, Gemini, ChatGPT, Cursor.
+                        </div>
+                    </div>
+                    <div class="p-3 bg-noir-950 rounded border border-noir-700 flex items-start gap-3">
+                        <i data-lucide="git-branch" class="w-5 h-5 text-stamp-gold shrink-0 mt-0.5"></i>
+                        <div>
+                            <strong class="text-white block">Git & README Evaluation</strong>
+                            Marks awarded for clean commits & detailed documentation.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registration Quick Box -->
+            <div class="lg:col-span-5 bg-dossier p-6 rounded-lg border-2 border-stamp-gold/40 space-y-4 text-center">
+                <span class="stamp-mark px-3 py-1 text-xs font-bold uppercase typewriter-text">HACKATHON ENTRY</span>
+                <div class="text-3xl font-extrabold text-white title-cinzel">₹449 <span class="text-xs font-normal text-parchment-400">/ Solo or Duo Team</span></div>
+
+                <!-- Countdown Timer (Live — registration closes Aug 29 00:00) -->
+                <div class="bg-noir-950 p-3 rounded border border-noir-700">
+                    <span class="block text-[10px] typewriter-text text-stamp-gold uppercase">Reg Closes In:</span>
+                    <div id="countdown" class="text-lg font-mono font-bold text-stamp-red tracking-wider mt-1">
+                        00 Days : 00 Hrs : 00 Mins : 00 Secs
+                    </div>
+                </div>
+
+                <a href="https://forms.gle/bDmxNrk2jL5XH2V99" target="_blank" rel="noopener noreferrer" class="w-full block text-center py-3 bg-stamp-gold hover:bg-amber-600 text-black font-extrabold text-xs uppercase tracking-wider rounded transition-all shadow-lg shadow-amber-900/40">
+                    REGISTER FOR CODESPRINT
+                </a>
+                <span class="block text-[10px] typewriter-text text-parchment-400">Coordinators: Vedhas Mayekar (8451097792) | Karthik Vinod (9820489099)</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: EVIDENCE BOARD (MOVIE-STYLE INVESTIGATION BOARD) -->
+    <section id="evidence" class="scroll-mt-24">
+        <div class="mb-10 text-center max-w-2xl mx-auto">
+            <span class="typewriter-text text-stamp-gold text-xs uppercase tracking-widest block mb-1">// CONNECT THE DOTS</span>
+            <h2 class="text-3xl sm:text-4xl font-black title-cinzel text-white">THE INVESTIGATION BOARD</h2>
+            <p class="text-xs text-parchment-400 mt-2">Follow the case timeline. Every card is stitched to the next with a single red thread.</p>
+        </div>
+
+        <!-- Movie-Style Case Board (Cork Board) -->
+        <div class="bg-noir-900 rounded-xl border border-noir-700 relative overflow-hidden board-cork">
+
+            <!-- Stitched Red Thread Connections (SVG overlay behind cards, snake pattern) -->
+            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
+                <g fill="none" stroke="#DC2626" stroke-linecap="round" stroke-linejoin="round" opacity="0.9">
+                    <!-- ROW 1: C1 -> C2 -> C3 -> C4 -> C5 (left to right, wavy stitch) -->
+                    <path vector-effect="non-scaling-stroke" stroke-width="0.13" stroke-dasharray="1.1 0.7" d="M12 22 C20 19 24 25 30 22 C38 19 42 25 50 22 C58 19 62 25 70 22 C78 19 82 25 88 22"/>
+                    <!-- DROP: C5 (right edge) down to ROW 2 -> C6 (right side) -->
+                    <path vector-effect="non-scaling-stroke" stroke-width="0.13" stroke-dasharray="1.1 0.7" d="M88 22 C88 33 72 37 63 48"/>
+                    <!-- ROW 2: C6 -> C7 (right to left, wavy stitch) -->
+                    <path vector-effect="non-scaling-stroke" stroke-width="0.13" stroke-dasharray="1.1 0.7" d="M63 48 C56 45 51 51 44 48 C41 47 38 49 37 48"/>
+                </g>
+                <!-- Stitch knots / pin anchor points -->
+                <g fill="#DC2626">
+                    <circle cx="12" cy="22" r="0.55"/>
+                    <circle cx="30" cy="22" r="0.55"/>
+                    <circle cx="50" cy="22" r="0.55"/>
+                    <circle cx="70" cy="22" r="0.55"/>
+                    <circle cx="88" cy="22" r="0.55"/>
+                    <circle cx="63" cy="48" r="0.55"/>
+                    <circle cx="37" cy="48" r="0.55"/>
+                </g>
+            </svg>
+
+            <!-- Board Header (pinned case note) -->
+            <div class="relative z-10 pt-8 flex flex-col items-center text-center px-4">
+                <div class="sticky-note bg-amber-200 text-noir-950 rounded-sm px-5 py-2.5 shadow-xl title-cinzel font-black text-sm sm:text-base rotate-[-1deg]">
+                    <span class="board-pin"></span>
+                    📁 ZIEGERS 2026 · CASE FILE BOARD
+                </div>
+                <span class="mt-2 text-[10px] typewriter-text text-stamp-red tracking-widest uppercase">All evidence pinned in chronological order</span>
+            </div>
+
+            <!-- SNAKE ROW 1: C1 -> C2 -> C3 -> C4 -> C5 (LEFT -> RIGHT) -->
+            <div class="relative z-10 px-4 sm:px-8 pt-10 pb-4">
+                <div class="flex items-center gap-3 mb-5">
+                    <span class="inline-flex items-center gap-2 px-3 py-1 bg-stamp-red text-white text-[11px] font-extrabold uppercase tracking-widest typewriter-text rounded border border-red-400">
+                        <i data-lucide="sun" class="w-3.5 h-3.5"></i> Day 1 · Esports & Games
+                    </span>
+                    <div class="flex-1 border-t border-noir-700"></div>
+                    <span class="text-[10px] typewriter-text text-parchment-400">05 Cases</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+                    <!-- CASE 01 -->
+                    <div class="sticky-note bg-amber-200 text-noir-950 rounded-sm p-3 rotate-[-1.5deg]">
+                        <span class="board-pin"></span>
+                        <span class="absolute -bottom-1.5 -right-1.5 w-2.5 h-2.5 bg-stamp-red rounded-full border border-red-800 shadow"></span>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="typewriter-text text-[10px] font-bold text-noir-700">CASE 01</span>
+                            <i data-lucide="gamepad-2" class="w-4 h-4 text-stamp-red"></i>
+                        </div>
+                        <h4 class="font-bold text-sm title-cinzel leading-tight">BGMI SQUAD</h4>
+                        <p class="text-[10px] text-noir-700/70 typewriter-text">Squad Battle Royale</p>
+                    </div>
+
+                    <!-- CASE 02 -->
+                    <div class="sticky-note bg-amber-200 text-noir-950 rounded-sm p-3 rotate-[1deg]">
+                        <span class="board-pin"></span>
+                        <span class="absolute -bottom-1.5 -right-1.5 w-2.5 h-2.5 bg-stamp-red rounded-full border border-red-800 shadow"></span>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="typewriter-text text-[10px] font-bold text-noir-700">CASE 02</span>
+                            <i data-lucide="flame" class="w-4 h-4 text-stamp-red"></i>
+                        </div>
+                        <h4 class="font-bold text-sm title-cinzel leading-tight">FREE FIRE</h4>
+                        <p class="text-[10px] text-noir-700/70 typewriter-text">Custom Room Battles</p>
+                    </div>
+
+                    <!-- CASE 03 -->
+                    <div class="sticky-note bg-amber-200 text-noir-950 rounded-sm p-3 rotate-[-1deg]">
+                        <span class="board-pin"></span>
+                        <span class="absolute -bottom-1.5 -right-1.5 w-2.5 h-2.5 bg-stamp-red rounded-full border border-red-800 shadow"></span>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="typewriter-text text-[10px] font-bold text-noir-700">CASE 03</span>
+                            <i data-lucide="zap" class="w-4 h-4 text-stamp-red"></i>
+                        </div>
+                        <h4 class="font-bold text-sm title-cinzel leading-tight">TECHMANIA GAMES</h4>
+                        <p class="text-[10px] text-noir-700/70 typewriter-text">Reaction Mini-Games</p>
+                    </div>
+
+                    <!-- CASE 04 -->
+                    <div class="sticky-note bg-amber-200 text-noir-950 rounded-sm p-3 rotate-[1.5deg]">
+                        <span class="board-pin"></span>
+                        <span class="absolute -bottom-1.5 -right-1.5 w-2.5 h-2.5 bg-stamp-red rounded-full border border-red-800 shadow"></span>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="typewriter-text text-[10px] font-bold text-noir-700">CASE 04</span>
+                            <i data-lucide="target" class="w-4 h-4 text-stamp-red"></i>
+                        </div>
+                        <h4 class="font-bold text-sm title-cinzel leading-tight">FC 25 FOOTBALL</h4>
+                        <p class="text-[10px] text-noir-700/70 typewriter-text">1v1 PS5 Knockouts</p>
+                    </div>
+
+                    <!-- CASE 05 -->
+                    <div class="sticky-note bg-amber-200 text-noir-950 rounded-sm p-3 rotate-[-1deg]">
+                        <span class="board-pin"></span>
+                        <span class="absolute -bottom-1.5 -right-1.5 w-2.5 h-2.5 bg-stamp-red rounded-full border border-red-800 shadow"></span>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="typewriter-text text-[10px] font-bold text-noir-700">CASE 05</span>
+                            <i data-lucide="glasses" class="w-4 h-4 text-stamp-red"></i>
+                        </div>
+                        <h4 class="font-bold text-sm title-cinzel leading-tight">VR GAME</h4>
+                        <p class="text-[10px] text-noir-700/70 typewriter-text">Immersive Experience</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SNAKE ROW 2: C6 -> C7 (RIGHT -> LEFT) -->
+            <div class="relative z-10 px-4 sm:px-8 pt-10 pb-12">
+                <div class="flex items-center gap-3 mb-5">
+                    <span class="inline-flex items-center gap-2 px-3 py-1 bg-stamp-gold text-noir-950 text-[11px] font-extrabold uppercase tracking-widest typewriter-text rounded border border-amber-500">
+                        <i data-lucide="moon" class="w-3.5 h-3.5"></i> Day 2 · Hackathon & Hunt
+                    </span>
+                    <div class="flex-1 border-t border-noir-700"></div>
+                    <span class="text-[10px] typewriter-text text-parchment-400">02 Cases</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 max-w-2xl mx-auto gap-5">
+                    <!-- CASE 07 (LEFT side on desktop = end of snake) -->
+                    <div class="sticky-note bg-amber-200 text-noir-950 rounded-sm p-3 rotate-[1deg] sm:order-1">
+                        <span class="board-pin"></span>
+                        <span class="absolute -bottom-1.5 -right-1.5 w-2.5 h-2.5 bg-stamp-red rounded-full border border-red-800 shadow"></span>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="typewriter-text text-[10px] font-bold text-noir-700">CASE 07</span>
+                            <i data-lucide="map-pin" class="w-4 h-4 text-stamp-gold"></i>
+                        </div>
+                        <h4 class="font-bold text-sm title-cinzel leading-tight">DECIPHER TREASURE HUNT</h4>
+                        <p class="text-[10px] text-noir-700/70 typewriter-text">Campus-Wide Trail</p>
+                    </div>
+
+                    <!-- CASE 06 (RIGHT side on desktop = snake continues from C5) -->
+                    <div class="sticky-note bg-amber-200 text-noir-950 rounded-sm p-3 rotate-[-1deg] sm:order-2">
+                        <span class="board-pin"></span>
+                        <span class="absolute -bottom-1.5 -right-1.5 w-2.5 h-2.5 bg-stamp-red rounded-full border border-red-800 shadow"></span>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="typewriter-text text-[10px] font-bold text-noir-700">CASE 06</span>
+                            <i data-lucide="cpu" class="w-4 h-4 text-stamp-gold"></i>
+                        </div>
+                        <h4 class="font-bold text-sm title-cinzel leading-tight">CODESPRINT 2026</h4>
+                        <p class="text-[10px] text-noir-700/70 typewriter-text">5-Hour Hackathon</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Board Footer Reminder -->
+            <div class="relative z-10 border-t border-noir-700/80">
+                <div class="text-center py-5 px-4 typewriter-text text-xs text-stamp-gold">
+                    📌 ALL DETECTIVES MUST REPORT TO ASSIGNED ROOMS ON TIME WITH VALID ID CARDS
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: PROTOCOLS & GENERAL INSTRUCTIONS -->
+    <section id="instructions" class="scroll-mt-24">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+
+            <!-- Guidelines list -->
+            <div class="lg:col-span-8 bg-dossier border border-noir-700 p-8 rounded-xl space-y-6">
+                <div>
+                    <span class="typewriter-text text-stamp-gold text-xs uppercase tracking-widest">// SECURITY DIRECTIVES</span>
+                    <h2 class="text-3xl font-black title-cinzel text-white flex items-center gap-3 mt-1">
+                        <i data-lucide="shield-alert" class="w-7 h-7 text-stamp-red"></i> BEFORE YOU STEP IN
+                    </h2>
+                </div>
+
+                <ol class="space-y-4 text-xs sm:text-sm text-parchment-200 typewriter-text list-decimal pl-5">
+                    {% for heading, description in protocols %}
+                    <li class="pl-2"><strong class="text-white">{{ heading }}</strong> {{ description }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+
+            <!-- Quick Verification card -->
+            <div class="lg:col-span-4 bg-noir-900 border border-stamp-red/50 p-6 rounded-xl flex flex-col justify-between text-center relative">
+                <div class="space-y-4">
+                    <div class="w-12 h-12 bg-stamp-red/20 text-stamp-red rounded-full flex items-center justify-center mx-auto border border-stamp-red/50">
+                        <i data-lucide="file-check-2" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold title-cinzel text-white">CASE FILE VERIFICATION</h3>
+                    <p class="text-xs text-parchment-300 leading-relaxed">
+                        Need help verifying your squad or payment receipt? Contact the Command Desk officers directly.
+                    </p>
+                </div>
+
+                <div class="pt-6 border-t border-noir-700/80 space-y-3">
+                    <a href="https://forms.gle/bDmxNrk2jL5XH2V99" target="_blank" rel="noopener noreferrer" class="w-full py-3 bg-stamp-red hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded border border-red-500 block transition-all">
+                        OFFICIAL GOOGLE FORM LINK
+                    </a>
+                    <span class="block text-[10px] typewriter-text text-parchment-400">Department of Computer Science • Case 2026</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+{% endblock %}

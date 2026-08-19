@@ -1,0 +1,174 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Casual Walk-in Log | ZIEGERS 2026-27{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 lg:px-8 py-12">
+    <!-- Operational Desk Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 pb-4 border-b border-noir-700">
+        <div>
+            <span class="typewriter-text text-stamp-gold text-xs uppercase tracking-widest block mb-2">// OPERATIONAL DESK</span>
+            <h1 class="text-3xl md:text-5xl font-black title-cinzel text-white tracking-wider flex items-center gap-3">
+                <i data-lucide="clipboard-list" class="w-8 h-8 text-stamp-red"></i>
+                CASUAL & WALK-IN <span class="text-stamp-red font-decipher">LOGS</span>
+            </h1>
+        </div>
+        <div class="text-right">
+            <span class="typewriter-text text-xs text-parchment-400">STATUS: ACTIVE SCANNING</span>
+            <a href="{% url 'core:results' %}" class="typewriter-text text-xs text-parchment-300 hover:text-stamp-gold flex items-center gap-1 justify-end mt-1">
+                <i data-lucide="trophy" class="w-3 h-3"></i> Results Board
+            </a>
+        </div>
+    </div>
+
+    <!-- PRE-REGISTERED PLAYERS SECTION BY GAME -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-black title-cinzel text-white flex items-center gap-2 mb-4">
+            <i data-lucide="shield-check" class="w-5 h-5 text-stamp-gold"></i> PRE-REGISTERED AGENTS
+        </h2>
+
+        {% if games %}
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {% for game in games %}
+            <div class="bg-dossier border border-noir-700 rounded-xl p-4 shadow-2xl">
+                <div class="flex justify-between items-center border-b border-noir-700 pb-3 mb-3">
+                    <h3 class="text-xl font-bold title-cinzel text-stamp-red">{{ game.name }}</h3>
+                    <span class="text-xs typewriter-text bg-noir-800 text-parchment-300 border border-noir-700 px-2 py-0.5 rounded">
+                        {{ game.pre_registered_players.count }} Dossiers
+                    </span>
+                </div>
+                <div class="space-y-2">
+                    {% for player in game.pre_registered_players.all %}
+                    <div class="flex justify-between items-center bg-noir-900/60 border border-noir-700 rounded p-2.5">
+                        <div>
+                            <strong class="font-mono text-white text-sm">{{ player.player_name }}</strong>
+                            {% if player.contact %}
+                            <small class="text-parchment-400 text-xs block font-mono">ID/Contact: {{ player.contact }}</small>
+                            {% endif %}
+                        </div>
+                        {% if player.is_checked_in %}
+                        <span class="text-xs typewriter-text text-amber-400 font-bold">✓ Checked In</span>
+                        {% else %}
+                        <form method="POST" action="{% url 'events:casual_log' %}" class="inline-flex">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="checkin_preregistered">
+                            <input type="hidden" name="player_id" value="{{ player.id }}">
+                            <button type="submit" class="px-3 py-1.5 bg-stamp-red hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider rounded transition-all">
+                                Deploy & Play
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <p class="text-xs text-parchment-400 font-mono">No pre-registered dossiers for this zone.</p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="p-4 bg-noir-800 border border-noir-700 text-parchment-300 font-mono rounded-lg">
+            No casual zones registered yet. Add zones via Django Admin.
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- NEW WALK-IN REGISTRATION FORM -->
+    <div class="bg-dossier border border-noir-700 rounded-xl p-6 shadow-2xl mb-8">
+        <h2 class="text-2xl font-black title-cinzel text-white flex items-center gap-2 mb-4">
+            <i data-lucide="plus" class="w-6 h-6 text-stamp-red"></i> REGISTER NEW WALK-IN OPERATOR
+        </h2>
+        <form method="POST" action="{% url 'events:casual_log' %}" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add_walkin">
+            <div class="sm:col-span-5">
+                <label class="block text-parchment-300 text-xs typewriter-text mb-1">Operator Name / Codename *</label>
+                <input type="text" name="player_name"
+                       class="w-full bg-noir-950 border border-noir-700 rounded p-2.5 text-white font-mono focus:border-stamp-red outline-none"
+                       placeholder="e.g. Agent Vega" required>
+            </div>
+            <div class="sm:col-span-4">
+                <label class="block text-parchment-300 text-xs typewriter-text mb-1">Game Zone *</label>
+                <select name="game_id"
+                        class="w-full bg-noir-950 border border-noir-700 rounded p-2.5 text-white font-mono focus:border-stamp-red outline-none"
+                        required>
+                    <option value="" class="bg-noir-950 text-parchment-400">-- Select Game Zone --</option>
+                    {% for game in games %}
+                    <option value="{{ game.id }}" class="bg-noir-950 text-white">{{ game.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="sm:col-span-3">
+                <button type="submit" class="w-full py-2.5 bg-stamp-red hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider rounded border border-red-500 transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="send" class="w-4 h-4"></i> REGISTER & DISPATCH
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- LIVE SESSION TRACKER TABLE -->
+    <div class="bg-dossier border border-noir-700 rounded-xl p-6 shadow-2xl">
+        <div class="flex justify-between items-center mb-3 gap-2">
+            <h2 class="text-2xl font-black title-cinzel text-white flex items-center gap-2">
+                <i data-lucide="activity" class="w-6 h-6 text-stamp-red"></i> LIVE ACTIVE & COMPLETED SESSIONS
+            </h2>
+            <span class="text-xs typewriter-text text-parchment-400">REAL-TIME TELEMETRY</span>
+        </div>
+
+        {% if sessions %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-center font-mono text-sm">
+                <thead>
+                    <tr class="border-b border-noir-700 text-parchment-400 text-xs uppercase tracking-wider">
+                        <th class="text-left pb-2">Operator</th>
+                        <th class="text-left pb-2">Zone</th>
+                        <th>Entry Type</th>
+                        <th>Check-in Time</th>
+                        <th>Status (Toggle)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for session in sessions %}
+                    <tr class="border-b border-noir-700/50">
+                        <td class="text-left py-2 font-bold text-white">{{ session.player_name }}</td>
+                        <td class="py-2">
+                            <span class="text-xs typewriter-text bg-noir-800 text-stamp-red px-2 py-0.5 rounded border border-noir-700">
+                                {{ session.game.name|default:"General" }}
+                            </span>
+                        </td>
+                        <td class="py-2">
+                            {% if session.is_walkin %}
+                            <span class="typewriter-text text-xs text-parchment-400">Walk-in</span>
+                            {% else %}
+                            <span class="typewriter-text text-xs text-stamp-gold">Pre-registered</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-parchment-400 text-xs">{{ session.check_in_time|date:"h:i A - M d" }}</td>
+                        <td class="py-2">
+                            <form method="POST" action="{% url 'events:casual_log' %}" class="inline-flex">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="toggle_status">
+                                <input type="hidden" name="session_id" value="{{ session.id }}">
+                                {% if session.status == 'Playing' %}
+                                <button type="submit" class="px-3 py-1.5 bg-stamp-red hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider rounded transition-all">
+                                    ● Active (Click to Complete)
+                                </button>
+                                {% else %}
+                                <button type="submit" class="px-3 py-1.5 bg-noir-800 hover:bg-stamp-gold text-parchment-300 hover:text-white font-bold text-xs uppercase tracking-wider rounded border border-noir-700 transition-all">
+                                    ✓ Closed (Reopen)
+                                </button>
+                                {% endif %}
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-xs text-parchment-400 font-mono py-4">No active sessions logged for today.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

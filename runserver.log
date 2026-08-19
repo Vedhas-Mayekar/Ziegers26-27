@@ -1,0 +1,13 @@
+Watching for file changes with StatReloader
+[19/Aug/2026 20:32:38] "GET / HTTP/1.1" 200 65570
+[19/Aug/2026 20:32:38] "GET /static/css/style.css HTTP/1.1" 304 0
+[19/Aug/2026 20:32:38] "GET /static/images/hero.png HTTP/1.1" 304 0
+[19/Aug/2026 20:32:38] "GET /static/images/logo.png HTTP/1.1" 304 0
+[19/Aug/2026 20:32:38] "GET /static/js/preloader.js HTTP/1.1" 304 0
+[19/Aug/2026 20:32:38] "GET /static/js/main.js HTTP/1.1" 304 0
+[19/Aug/2026 20:32:38] "GET /static/css/tailwind-output.css HTTP/1.1" 200 26731
+[19/Aug/2026 20:32:39] "GET /static/audio/investigation-theme.mp3 HTTP/1.1" 304 0
+[19/Aug/2026 20:32:39] "GET /static/site.webmanifest HTTP/1.1" 304 0
+[19/Aug/2026 20:32:45] "GET /static/images/apple-touch-icon.png HTTP/1.1" 404 1895
+[19/Aug/2026 20:32:45] "GET /results/ HTTP/1.1" 200 32790
+[19/Aug/2026 20:32:50] "GET /static/images/apple-touch-icon.png HTTP/1.1" 404 1895

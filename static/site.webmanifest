@@ -1,0 +1,16 @@
+{
+  "name": "ZIEGERS 2026-27 | DeCipher",
+  "short_name": "ZIEGERS 2026-27",
+  "description": "Department of Computer Science presents ZIEGERS 2026-27: DeCipher. Solve the unsolved.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090807",
+  "theme_color": "#DC2626",
+  "icons": [
+    {
+      "src": "/static/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}

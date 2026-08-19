@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Crew | ZIEGERS 2026-27</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Outfit:wght@300;400;500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Compiled Tailwind CSS (build via: npm run build:css) -->
+    <link rel="stylesheet" href="{% static 'css/tailwind-output.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="relative min-h-screen selection:bg-stamp-red selection:text-white">
+
+    <!-- PRELOADER: ZIEGERS Logo Reveal (≈2s) -->
+    <div id="preloader" aria-hidden="true">
+        <div class="pl-logo">
+            <img src="{% static 'images/logo.png' %}" alt="ZIEGERS 2026-27">
+        </div>
+    </div>
+
+    <!-- TOP CONFIDENTIAL BANNER -->
+    <div class="police-tape py-1.5 font-extrabold text-xs uppercase tracking-widest text-center shadow-lg relative z-50 flex justify-center items-center gap-4 whitespace-nowrap overflow-x-auto" style="color: #FF5722; text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,0.9);">
+        <span>⚠️ TOP SECRET // CONFIDENTIAL CASE FILES</span>
+        <span class="hidden sm:inline">• DEPARTMENT OF COMPUTER SCIENCE PRESENTS ZIEGERS 2026-27</span>
+        <span>⚠️ REGISTRATION ENDS 28TH AUGUST</span>
+    </div>
+
+    <!-- GO BACK BAR -->
+    <div class="bg-noir-900/90 backdrop-blur-md border-b border-noir-700/80 px-4 lg:px-8 py-3.5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="{% url 'core:landing' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-noir-800 hover:bg-stamp-red text-parchment-200 hover:text-white font-bold text-xs uppercase tracking-wider rounded border border-noir-600 hover:border-red-500 transition-all">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Go Back
+            </a>
+            <span class="text-xs typewriter-text text-stamp-gold tracking-widest hidden sm:inline">COMMAND CREW DIRECTORY</span>
+        </div>
+    </div>
+
+    <!-- COMMAND CREW PAGE -->
+    <main class="max-w-7xl mx-auto px-4 lg:px-8 py-16 min-h-[60vh]">
+
+        <!-- PAGE HEADER -->
+        <div class="mb-12 text-center max-w-2xl mx-auto">
+            <span class="typewriter-text text-stamp-gold text-xs uppercase tracking-widest block mb-1">// ACTIVE PERSONNEL DOSSIERS</span>
+            <h1 class="text-3xl sm:text-4xl font-black title-cinzel text-white">COMMAND CREW LEADERSHIP</h1>
+            <p class="text-xs text-parchment-400 mt-2">The full investigating bureau behind ZIEGERS 2026-27 — every portfolio, every operative, one mission.</p>
+        </div>
+
+        <!-- TIER-BASED CREW DIRECTORY -->
+        {% for section in tier_sections %}
+        <section class="mb-20" id="tier-{{ section.key }}">
+            <!-- Section header -->
+            <div class="flex items-center gap-4 mb-2">
+                <div class="flex-1 h-px bg-noir-700"></div>
+                <span class="text-2xl"><i data-lucide="{{ section.icon }}" class="w-5 h-5 text-stamp-gold"></i></span>
+                <h2 class="text-xl sm:text-2xl font-black title-cinzel text-white tracking-wide text-center">{{ section.label }}</h2>
+                <span class="text-2xl"><i data-lucide="{{ section.icon }}" class="w-5 h-5 text-stamp-gold"></i></span>
+                <div class="flex-1 h-px bg-noir-700"></div>
+            </div>
+            <p class="text-center typewriter-text text-[11px] text-parchment-400 uppercase tracking-widest mb-8">{{ section.desc }}</p>
+
+            <!-- Cards grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 {% if section.key == 'command' %}lg:grid-cols-3 max-w-5xl mx-auto{% endif %}">
+                {% for member in section.members %}
+                <article class="crime-card group relative bg-noir-900 rounded-xl border border-noir-700 overflow-hidden hover:border-stamp-gold transition-colors flex flex-col">
+                    <!-- Confidental strip -->
+                    <div class="absolute top-3 right-3 z-10 bg-noir-950/90 border border-stamp-red/50 text-stamp-red px-2.5 py-1 rounded text-[9px] font-extrabold typewriter-text uppercase tracking-widest rotate-2 pointer-events-none">
+                        ⚠ Case File
+                    </div>
+
+                    <!-- Photo / Evidence mug area -->
+                    <div class="relative aspect-square overflow-hidden border-b border-noir-700 bg-noir-950">
+                        <div class="absolute inset-0 bg-gradient-to-t from-noir-950 via-transparent to-transparent z-[1]"></div>
+                        <img src="{% static member.image %}" alt="{{ member.role }} — ZIEGERS 2026-27 Command Crew"
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-90 group-hover:opacity-100">
+                        <!-- Fingerprint / red-thread decorative corner -->
+                        <div class="absolute bottom-3 left-3 z-[2] w-8 h-8 border-b-2 border-l-2 border-stamp-gold/40 rounded-bl-xl"></div>
+                        <div class="absolute top-3 left-3 z-[2] w-8 h-8 border-t-2 border-l-2 border-stamp-gold/40 rounded-tl-xl"></div>
+                    </div>
+
+                    <!-- Dossier content -->
+                    <div class="p-5 flex-1 flex flex-col gap-2.5">
+                        <div class="flex items-start justify-between gap-2">
+                            <div>
+                                <span class="stamp-mark px-2 py-0.5 text-[9px] font-extrabold uppercase typewriter-text leading-relaxed">{{ member.role }}</span>
+                            </div>
+                        </div>
+                        <h3 class="text-base font-bold title-cinzel text-parchment-100 tracking-wide group-hover:text-stamp-gold transition-colors">
+                            {{ member.code }}
+                        </h3>
+                        <p class="text-[12px] leading-relaxed text-parchment-400 flex-1">
+                            {{ member.description }}
+                        </p>
+                        <!-- Dossier footer -->
+                        <div class="pt-3 mt-1 border-t border-noir-700/70 flex items-center justify-between text-[9px] typewriter-text text-noir-600 uppercase tracking-widest">
+                            <span>ZIEGERS 2026-27</span>
+                            <span class="text-stamp-red">● Verified Operative</span>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+        {% endfor %}
+
+        <!-- Footer reminder -->
+        <div class="mt-16 text-center pt-6 border-t border-noir-700/80 typewriter-text text-xs text-stamp-gold">
+            📞 FOR ANY INQUIRIES, CONTACT THE COMMAND CREW DIRECTLY DURING EVENT HOURS
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-noir-700 bg-noir-950 py-10 px-4 text-center text-xs typewriter-text text-parchment-400 space-y-3">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2 text-parchment-200">
+                <i data-lucide="shield" class="w-4 h-4 text-stamp-red"></i>
+                <span>ZIEGERS 2026-27 • Department of Computer Science</span>
+            </div>
+            <p>© 2026-27 ZIEGERS Bureau. Solve the Unsolved. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/preloader.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

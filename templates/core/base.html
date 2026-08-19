@@ -1,0 +1,204 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ZIEGERS 2026-27 | DeCipher - Solve the Unsolved{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Outfit:wght@300;400;500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Compiled Tailwind CSS (build via: npm run build:css) -->
+    <link rel="stylesheet" href="{% static 'css/tailwind-output.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+
+    <!-- Apple touch icons (optional for homescreen) -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+
+    <!-- Web manifest (optional for PWA) -->
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+</head>
+<body class="relative min-h-screen selection:bg-stamp-red selection:text-white">
+
+    <!-- PRELOADER: ZIEGERS Logo Reveal (≈2s) -->
+    <div id="preloader" aria-hidden="true">
+        <div class="pl-logo">
+            <img src="{% static 'images/logo.png' %}" alt="ZIEGERS 2026-27">
+        </div>
+    </div>
+
+    <!-- Flashlight Mode Overlay (Toggleable) -->
+    <div id="torch-overlay"></div>
+
+    <!-- Mouse Glow Overlay -->
+    <div id="mouse-glow"></div>
+
+    <!-- Background Investigation Theme Audio -->
+    <audio id="bg-audio" loop>
+        <source src="{% static 'audio/investigation-theme.mp3' %}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- TOP CONFIDENTIAL BANNER -->
+    <div class="police-tape py-1.5 font-extrabold text-[10px] sm:text-xs uppercase tracking-widest text-center shadow-lg relative z-50 flex justify-center items-center gap-2 sm:gap-4 whitespace-nowrap overflow-x-auto" style="color: #FF5722; text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,0.9);">
+        <span>⚠️ TOP SECRET // CONFIDENTIAL CASE FILES</span>
+        <span class="hidden sm:inline">• DEPARTMENT OF COMPUTER SCIENCE PRESENTS ZIEGERS 2026-27</span>
+        <span>⚠️ REGISTRATION ENDS 28TH AUGUST</span>
+    </div>
+
+    <!-- NAVIGATION BAR -->
+    <nav class="sticky top-0 z-40 bg-noir-900/90 backdrop-blur-md border-b border-noir-700/80 px-3 sm:px-4 lg:px-8 py-3 transition-all">
+        <div class="max-w-7xl mx-auto">
+            <!-- Top Row: Logo + Desktop Links + Compact Controls -->
+            <div class="flex items-center justify-between gap-2">
+                <!-- Brand Logo -->
+                <a href="#" class="flex items-center gap-3 group shrink-0">
+                    <img src="{% static 'images/logo.png' %}" alt="ZIEGERS 2026-27" class="h-9 sm:h-10 w-auto object-contain transition-all duration-300">
+                </a>
+
+                <!-- Desktop Links -->
+                <div class="hidden md:flex items-center gap-5 text-[13px] font-medium tracking-wide">
+                    <a href="#cases" class="hover:text-stamp-red transition-colors flex items-center gap-1.5 whitespace-nowrap"><i data-lucide="folder-open" class="w-4 h-4 text-stamp-gold"></i> Open Cases</a>
+                    <a href="#codesprint" class="hover:text-stamp-red transition-colors flex items-center gap-1.5 whitespace-nowrap"><i data-lucide="code-2" class="w-4 h-4 text-stamp-gold"></i> CodeSprint '26</a>
+                    <a href="#evidence" class="hover:text-stamp-red transition-colors flex items-center gap-1.5 whitespace-nowrap"><i data-lucide="pin" class="w-4 h-4 text-stamp-gold"></i> Evidence Board</a>
+                    <a href="#instructions" class="hover:text-stamp-red transition-colors flex items-center gap-1.5 whitespace-nowrap"><i data-lucide="shield-alert" class="w-4 h-4 text-stamp-gold"></i> Protocols</a>
+                    <a href="{% url 'core:command_crew' %}" class="hover:text-stamp-red transition-colors flex items-center gap-1.5 whitespace-nowrap"><i data-lucide="users" class="w-4 h-4 text-stamp-gold"></i> Command Crew</a>
+                    <a href="{% url 'core:results' %}" class="hover:text-stamp-red transition-colors flex items-center gap-1.5 whitespace-nowrap"><i data-lucide="trophy" class="w-4 h-4 text-stamp-gold"></i> Results</a>
+                </div>
+
+                <!-- Compact Controls (labels hidden on mobile to save space) -->
+                <div class="flex items-center gap-1.5 sm:gap-2">
+                    <!-- Torch Mode Toggle Button (Torch OFF = dark mode by default, struck-through icon) -->
+                    <button id="torch-btn" onclick="toggleTorch()" title="Turn on the lights to solve the case" class="p-2 border border-stamp-gold/60 bg-noir-800 text-amber-300 rounded hover:border-stamp-red hover:text-stamp-red transition-all text-xs flex items-center gap-1.5 shrink-0">
+                        <i data-lucide="flashlight" class="w-4 h-4 line-through"></i>
+                        <span class="hidden sm:inline">Dark</span>
+                    </button>
+
+                    <!-- Audio FX Toggle -->
+                    <button id="audio-btn" onclick="toggleAudio()" title="Toggle Sound FX" class="p-2 border border-noir-600 bg-noir-800 text-parchment-200 rounded hover:border-stamp-gold hover:text-stamp-gold transition-all text-xs flex items-center gap-1.5 shrink-0">
+                        <i data-lucide="volume-2" id="audio-icon" class="w-4 h-4"></i>
+                    </button>
+
+                    <!-- CTA Button (Desktop only — mobile has Register in bottom bar) -->
+                    <a href="https://forms.gle/bDmxNrk2jL5XH2V99" target="_blank" rel="noopener noreferrer" class="hidden md:flex px-4 py-2 bg-stamp-red hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded border border-red-500/50 shadow-lg shadow-red-900/40 transition-all items-center gap-2 whitespace-nowrap">
+                        <i data-lucide="file-plus" class="w-4 h-4"></i> File Case / Register
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mobile Bottom Action Bar (replaces burger/drawer) -->
+            <div class="md:hidden flex items-stretch gap-1.5 mt-2.5 pt-2.5 border-t border-noir-700/80">
+                <a href="{% url 'core:command_crew' %}" class="flex-1 min-w-0 flex flex-col items-center justify-center gap-1 px-2 py-1.5 bg-noir-800 hover:bg-noir-700 border border-noir-600 rounded text-parchment-200 transition-all">
+                    <i data-lucide="users" class="w-4 h-4 text-stamp-gold shrink-0"></i>
+                    <span class="text-[9px] font-bold uppercase tracking-wider typewriter-text">Crew</span>
+                </a>
+                <a href="{% url 'core:results' %}" class="flex-1 min-w-0 flex flex-col items-center justify-center gap-1 px-2 py-1.5 bg-noir-800 hover:bg-noir-700 border border-noir-600 rounded text-parchment-200 transition-all">
+                    <i data-lucide="trophy" class="w-4 h-4 text-stamp-gold shrink-0"></i>
+                    <span class="text-[9px] font-bold uppercase tracking-wider typewriter-text">Results</span>
+                </a>
+                <a href="https://forms.gle/bDmxNrk2jL5XH2V99" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-0 flex flex-col items-center justify-center gap-1 px-2 py-1.5 bg-stamp-red hover:bg-red-700 border border-red-500/50 rounded text-white transition-all">
+                    <i data-lucide="file-plus" class="w-4 h-4 shrink-0"></i>
+                    <span class="text-[9px] font-bold uppercase tracking-wider typewriter-text">Register</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- DARK MODE WARNING BANNER (visible while dark/torch mode is active) -->
+    <div id="dark-mode-warning" class="bg-amber-950 border-b-2 border-amber-500 px-4 py-2 text-center relative z-[55]">
+        <p class="typewriter-text text-amber-300 text-xs sm:text-sm font-extrabold uppercase tracking-widest flex flex-wrap items-center justify-center gap-2">
+            <i data-lucide="triangle-alert" class="w-4 h-4 text-amber-400 shrink-0"></i>
+             Turn on the lights, to solve the case 
+            <i data-lucide="triangle-alert" class="w-4 h-4 text-amber-400 shrink-0"></i>
+        </p>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    {% block content %}{% endblock %}
+
+    <!-- FOOTER -->
+    <footer class="border-t border-noir-700 bg-noir-950 py-10 px-4 text-center text-xs typewriter-text text-parchment-400 space-y-3">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2 text-parchment-200">
+                <i data-lucide="shield" class="w-4 h-4 text-stamp-red"></i>
+                <span>ZIEGERS 2026-27 • Department of Computer Science</span>
+            </div>
+            <p>© 2026-27 ZIEGERS Bureau. Solve the Unsolved. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- MODAL: CASE DOSSIER DETAIL -->
+    <div id="case-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-dossier border-2 border-noir-600 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl space-y-6">
+            <!-- Close Button -->
+            <button onclick="closeCaseModal()" class="absolute top-4 right-4 p-2 text-parchment-400 hover:text-stamp-red text-xs typewriter-text border border-noir-700 rounded">
+                [CLOSE ✕]
+            </button>
+
+            <!-- Dynamic Content Container -->
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- MODAL: QUICK REGISTRATION FORM -->
+    <div id="register-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-noir-900 border-2 border-stamp-red rounded-xl max-w-lg w-full p-6 relative shadow-2xl space-y-6">
+
+            <button onclick="closeRegisterModal()" class="absolute top-4 right-4 p-2 text-parchment-400 hover:text-stamp-red text-xs typewriter-text border border-noir-700 rounded">
+                [CANCEL ✕]
+            </button>
+
+            <div class="space-y-1">
+                <span class="stamp-mark px-2 py-0.5 text-[10px] uppercase typewriter-text">CASE REGISTRATION BUREAU</span>
+                <h3 id="reg-event-title" class="text-2xl font-bold title-cinzel text-white">FILE CASE ENTRY</h3>
+                <p class="text-xs text-parchment-400">Complete the form to obtain your official Case Ticket.</p>
+            </div>
+
+            <form onsubmit="handleRegistrationSubmit(event)" class="space-y-4 text-xs typewriter-text">
+                {% csrf_token %}
+                <div>
+                    <label class="block text-parchment-300 mb-1">Lead Detective / Student Name *</label>
+                    <input type="text" id="reg-name" required placeholder="e.g. Rahul Sharma" class="w-full bg-noir-950 border border-noir-700 rounded p-2.5 text-white focus:border-stamp-red outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-parchment-300 mb-1">Contact Phone *</label>
+                        <input type="tel" id="reg-phone" required placeholder="10 Digit Mobile" class="w-full bg-noir-950 border border-noir-700 rounded p-2.5 text-white focus:border-stamp-red outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-parchment-300 mb-1">College Name *</label>
+                        <input type="text" id="reg-college" required placeholder="College Campus" class="w-full bg-noir-950 border border-noir-700 rounded p-2.5 text-white focus:border-stamp-red outline-none">
+                    </div>
+                </div>
+
+                <div class="bg-noir-950 p-3 rounded border border-noir-700 flex justify-between items-center text-sm">
+                    <span class="text-parchment-300">Total Entry Fee:</span>
+                    <strong id="reg-fee-display" class="text-stamp-gold text-lg font-mono font-bold">₹0</strong>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-stamp-red hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider rounded border border-red-500 transition-all shadow-lg">
+                    SUBMIT & GENERATE CASE TOKEN
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Serialized case data for client-side modal rendering -->
+    {% block json_data %}
+    {{ case_details_json|json_script:"case-details-data" }}
+    {% endblock %}
+
+    <script src="{% static 'js/preloader.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

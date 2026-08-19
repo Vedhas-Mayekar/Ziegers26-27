@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+db.sqlite3
+/staticfiles/
+
+# Virtual environments
+.venv/
+
+# Node dependencies & build artifacts
+node_modules/
+npm-debug.log*
+
+# IDE
+.vs/
+.idea/
+*.sublime-project
+*.sublime-workspace

@@ -1,0 +1,328 @@
+/* ============================================================
+   ZIEGERS 2026-27 | DeCipher — Custom Styles
+   ============================================================ */
+
+/* Custom Noise Texture & Grunge Styling */
+body {
+    background-color: #090807;
+    color: #E6D5B8;
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden;
+}
+
+.typewriter-text {
+    font-family: 'Special Elite', monospace;
+}
+
+.title-cinzel {
+    font-family: 'Cinzel', serif;
+}
+
+/* Police Tape Animation */
+.police-tape {
+    background: repeating-linear-gradient(
+        -45deg,
+        #D97706,
+        #D97706 20px,
+        #11100E 20px,
+        #11100E 40px
+    );
+}
+
+/* Red String Canvas Connection effect styling */
+.crime-card {
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.crime-card:hover {
+    transform: translateY(-6px) rotate(0.5deg);
+    box-shadow: 0 20px 40px -15px rgba(220, 38, 38, 0.3);
+}
+
+/* Confidential Rubber Stamp Effect */
+.stamp-mark {
+    border: 3px double #DC2626;
+    color: #DC2626;
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="black" opacity="0.85"/></svg>');
+    transform: rotate(-12deg);
+    display: inline-block;
+}
+
+/* Flashlight Torch Spotlight overlay */
+#torch-overlay {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle 220px at var(--x, 50%) var(--y, 50%), transparent 0%, rgba(9, 8, 7, 0.92) 80%);
+    z-index: 40;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Mouse Glow Effect */
+#mouse-glow {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+    margin-left: -150px;
+    margin-top: -150px;
+    background: radial-gradient(circle, rgba(220, 38, 38, 0.12) 0%, rgba(217, 119, 6, 0.06) 40%, transparent 70%);
+    border-radius: 50%;
+    z-index: 45;
+    transform: translate3d(var(--glow-x, 0px), var(--glow-y, 0px), 0);
+    will-change: transform;
+    transition: opacity 0.3s ease;
+}
+
+/* ============================================================
+   CUSTOM CURSORS (Theme-matched)
+   ============================================================ */
+
+/* Default cursor: Orange arrow (matches stamp-gold/amber theme) */
+body, * {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M4 2 L20 12 L12 13 L8 20 Z" fill="%23D97706" stroke="%237C2D12" stroke-width="1.5" stroke-linejoin="round"/><path d="M4 2 L20 12 L12 13 L8 20 Z" fill="none" stroke="%23FBBF24" stroke-width="0.6" stroke-linejoin="round" opacity="0.6"/></svg>') 2 2, auto;
+}
+
+/* Pointer cursor: Red caution triangle with exclamation mark */
+a, button, [role="button"], .filter-tab, .case-item, .sticky-note, input[type="submit"], select, label[for], summary, .board-pin {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2 L22 20 L2 20 Z" fill="%23DC2626" stroke="%237F1D1D" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 2 L22 20 L2 20 Z" fill="none" stroke="%23FCA5A5" stroke-width="0.6" stroke-linejoin="round" opacity="0.5"/><line x1="12" y1="8" x2="12" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round"/><circle cx="12" cy="17.5" r="1.5" fill="white"/></svg>') 12 2, pointer;
+}
+
+/* Movie-Style Investigation Board (Corkboard) */
+.board-cork {
+    background-color: #6B4226;
+    background-image:
+        radial-gradient(circle at 25% 20%, rgba(255, 236, 179, 0.07) 0%, transparent 45%),
+        radial-gradient(circle at 75% 75%, rgba(0, 0, 0, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(255, 220, 170, 0.04) 0%, transparent 60%);
+    background-size: 100% 100%, 100% 100%, 100% 100%;
+    background-position: 0 0, 0 0, 0 0;
+    box-shadow: inset 0 0 70px rgba(0, 0, 0, 0.55);
+}
+
+/* Paper Sticky Note Card (real yellow paper with subtle grain) */
+.sticky-note {
+    position: relative;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: visible;
+}
+.sticky-note::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(0, 0, 0, 0.02) 0px,
+        rgba(0, 0, 0, 0.02) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+.sticky-note::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.06));
+    pointer-events: none;
+    z-index: 1;
+}
+.sticky-note:hover {
+    transform: rotate(0deg) translateY(-6px);
+    box-shadow: 0 16px 28px rgba(0, 0, 0, 0.6);
+    z-index: 30;
+}
+
+/* Board Pin (holds thread + sticky notes to cork) */
+.board-pin {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15px;
+    height: 15px;
+    background: radial-gradient(circle at 32% 28%, #FCA5A5, #DC2626 45%, #7F1D1D 100%);
+    border-radius: 9999px;
+    box-shadow:
+        0 3px 5px rgba(0, 0, 0, 0.6),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.45),
+        inset 0 1px 2px rgba(255, 236, 179, 0.5);
+    z-index: 20;
+}
+
+.board-pin::after {
+    content: '';
+    position: absolute;
+    top: 2.5px;
+    left: 3.5px;
+    width: 4.5px;
+    height: 4px;
+    background: rgba(255, 236, 179, 0.65);
+    border-radius: 9999px;
+    transform: rotate(-20deg);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #090807;
+}
+::-webkit-scrollbar-thumb {
+    background: #3D3730;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #DC2626;
+}
+
+/* ============================================================
+   PRELOADER — ZIEGERS LOGO REVEAL (≈2s)
+   The splash logo fades/blurs in, glows, holds briefly,
+   then fades out. Responsive for mobile / tablet / desktop.
+   ============================================================ */
+
+/* Lock page scroll while the loading sequence plays */
+html.preload-lock,
+html.preload-lock body {
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Full-screen overlay */
+#preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(ellipse at 50% 45%, #1c1610 0%, #0b0a08 65%, #090807 100%),
+        #090807;
+    overflow: hidden;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+/* Film-grain / scanline texture (GPU-cheap, no images) */
+#preloader::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(0, 0, 0, 0.14) 3px,
+        rgba(0, 0, 0, 0.14) 4px
+    );
+    pointer-events: none;
+}
+
+/* Deep cinematic vignette (edges stay in darkness) */
+#preloader::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
+    pointer-events: none;
+}
+
+/* ---- Logo (the single hero of the preloader) ---- */
+.pl-logo {
+    position: relative;
+    z-index: 5;
+    padding: 6vw;
+    max-width: 100%;
+    opacity: 0;
+    transform: scale(0.82);
+    filter: blur(18px);
+    animation: pl-logo-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+    /* GPU compositing hint for smooth mobile animation */
+    will-change: transform, opacity, filter;
+}
+
+.pl-logo img {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: min(62vw, 360px);
+    max-height: 45vh;
+    object-fit: contain;
+    animation: pl-logo-glow 1s ease-in-out 1.1s infinite;
+    will-change: filter;
+}
+
+/* Reveal: blur+scale in quickly */
+@keyframes pl-logo-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.82);
+        filter: blur(18px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+}
+
+/* Warm evidence-board glow around the emblem while it holds */
+@keyframes pl-logo-glow {
+    0%, 100% {
+        filter: drop-shadow(0 0 22px rgba(217, 119, 6, 0.45));
+    }
+    50% {
+        filter: drop-shadow(0 0 50px rgba(217, 119, 6, 0.85));
+    }
+}
+
+/* Responsive tuning: slightly larger emblem on big screens */
+@media (min-width: 768px) {
+    .pl-logo img {
+        max-width: min(34vw, 420px);
+        max-height: 40vh;
+    }
+}
+
+@media (min-width: 1280px) {
+    .pl-logo img {
+        max-width: 440px;
+        max-height: 38vh;
+    }
+}
+
+/* Respect users who prefer reduced motion: skip the fancy
+   blur/glow animations and just reveal the logo instantly. */
+@media (prefers-reduced-motion: reduce) {
+    .pl-logo {
+        animation: none;
+        opacity: 1;
+        transform: none;
+        filter: none;
+    }
+    .pl-logo img {
+        animation: none;
+    }
+}
+
+/* Faded-out state applied by JS at the end of the sequence */
+#preloader.preloader-done {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}

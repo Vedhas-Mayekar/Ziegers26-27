@@ -1,0 +1,13 @@
+{
+  "name": "ziegers2026",
+  "version": "1.0.0",
+  "description": "ZIEGERS 2026-27 | DeCipher — Django + Tailwind CSS",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -i ./static/css/tailwind-input.css -o ./static/css/tailwind-output.css --minify",
+    "watch:css": "tailwindcss -i ./static/css/tailwind-input.css -o ./static/css/tailwind-output.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.13"
+  }
+}
