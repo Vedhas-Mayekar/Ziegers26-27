@@ -29,6 +29,10 @@ DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.vercel.app']
 
+# Staff-only operations use Django Admin authentication.  Setting this avoids
+# Django's default /accounts/login/ redirect, which this project does not use.
+LOGIN_URL = '/admin/login/'
+
 # Application references
 # https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-INSTALLED_APPS
 INSTALLED_APPS = [

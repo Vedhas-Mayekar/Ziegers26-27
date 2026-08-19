@@ -25,6 +25,16 @@ class ResultsPageTests(TestCase):
         self.assertContains(response, '14 PTS')
         self.assertNotContains(response, 'name="action" value="toggle_status"')
 
+    def test_walkin_desk_redirects_anonymous_users_to_admin_login(self):
+        response = self.client.get('/events/walkins/')
+
+        self.assertRedirects(response, '/admin/login/?next=/events/walkins/')
+
+    def test_legacy_accounts_login_url_redirects_to_admin_login(self):
+        response = self.client.get('/accounts/login/?next=/events/walkins/')
+
+        self.assertRedirects(response, '/admin/login/?next=/events/walkins/')
+
     def test_only_staff_can_toggle_a_session(self):
         url = reverse('core:results')
         response = self.client.post(url, {'action': 'toggle_status', 'session_id': self.session.pk})
