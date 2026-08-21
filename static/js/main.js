@@ -185,8 +185,22 @@ function toggleAudio() {
 
 // ---------------------------------------------------------------------------
 // Dark Mode / Torch (REVERSED: dark mode ON by default)
+// Persisted globally in localStorage so the light stays on/off across pages.
 // ---------------------------------------------------------------------------
-let torchActive = true; // Starts in dark mode
+const TORCH_STORAGE_KEY = 'ziegers_torch_active';
+
+// Read the saved torch state (default: dark mode ON = torchActive true)
+function getInitialTorchState() {
+    try {
+        const saved = localStorage.getItem(TORCH_STORAGE_KEY);
+        if (saved !== null) {
+            return saved === 'true';
+        }
+    } catch (e) { /* localStorage unavailable — fall back to default */ }
+    return true; // Default = dark mode on
+}
+
+let torchActive = getInitialTorchState();
 const torchOverlay = document.getElementById('torch-overlay');
 const darkModeWarning = document.getElementById('dark-mode-warning');
 const torchBtn = document.getElementById('torch-btn');
@@ -220,6 +234,10 @@ function applyTorchState() {
 function toggleTorch() {
     playClickSound();
     torchActive = !torchActive; // Toggle between dark mode and lights-on
+    // Persist the state so it stays consistent across all pages
+    try {
+        localStorage.setItem(TORCH_STORAGE_KEY, String(torchActive));
+    } catch (e) { /* localStorage unavailable — state persists only for this session */ }
     applyTorchState();
 }
 
