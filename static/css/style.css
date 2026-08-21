@@ -72,6 +72,10 @@ body {
     transition: opacity 0.3s ease;
 }
 
+/* Set by the tiny head script before content is painted. */
+html.torch-dark #torch-overlay { opacity: 1; }
+html:not(.torch-dark) #dark-mode-warning { display: none; }
+
 /* Mouse Glow Effect */
 #mouse-glow {
     pointer-events: none;

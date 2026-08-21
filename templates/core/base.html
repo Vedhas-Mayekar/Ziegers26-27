@@ -17,6 +17,17 @@
     <!-- Compiled Tailwind CSS (build via: npm run build:css) -->
     <link rel="stylesheet" href="{% static 'css/tailwind-output.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script>
+        // Apply the saved torch preference before the page paints so moving
+        // between pages never resets or flashes the opposite light state.
+        try {
+            document.documentElement.classList.toggle(
+                'torch-dark', localStorage.getItem('ziegers_torch_active') !== 'false'
+            );
+        } catch (error) {
+            document.documentElement.classList.add('torch-dark');
+        }
+    </script>
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">

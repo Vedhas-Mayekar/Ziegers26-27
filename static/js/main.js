@@ -208,6 +208,7 @@ const torchIcon = torchBtn ? torchBtn.querySelector('i') : null;
 const torchBtnText = torchBtn ? torchBtn.querySelector('span') : null;
 
 function applyTorchState() {
+    document.documentElement.classList.toggle('torch-dark', torchActive);
     if (torchOverlay) {
         torchOverlay.style.opacity = torchActive ? '1' : '0';
     }
@@ -240,6 +241,18 @@ function toggleTorch() {
     } catch (e) { /* localStorage unavailable — state persists only for this session */ }
     applyTorchState();
 }
+
+// Preserve the state across immediate page navigation and sync it with other
+// open ZIEGERS pages that share the same browser storage.
+window.addEventListener('pagehide', () => {
+    try { localStorage.setItem(TORCH_STORAGE_KEY, String(torchActive)); } catch (e) { /* ignore */ }
+});
+window.addEventListener('storage', (event) => {
+    if (event.key === TORCH_STORAGE_KEY && event.newValue !== null) {
+        torchActive = event.newValue === 'true';
+        applyTorchState();
+    }
+});
 
 // Initialize dark mode on page load
 applyTorchState();
