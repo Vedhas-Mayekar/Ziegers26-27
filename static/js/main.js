@@ -393,6 +393,89 @@ function closeRegisterModal() {
 }
 
 const GOOGLE_FORM_RESPONSE_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSezCly9RvWmHngTWN-t1jrRZSojNixqyosRR6ArE0CftdojPw/formResponse';
+const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/npptddim/image/upload';
+const CLOUDINARY_UPLOAD_PRESET = 'ziegers_decipher_payment_receipts';
+const RECEIPT_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+let receiptUploadToken = 0;
+
+function openGeneralRegistration() {
+    openCodeSprintRegistration();
+}
+
+function getRegistrationForm() {
+    return document.getElementById('codesprint-registration-form');
+}
+
+function setReceiptStatus(message, state) {
+    const status = document.getElementById('receipt-upload-status');
+    status.textContent = message;
+    status.className = `receipt-status ${state ? `is-${state}` : ''}`;
+    status.classList.toggle('hidden', !message);
+}
+
+function updateRegistrationSubmitState() {
+    const form = getRegistrationForm();
+    const submitButton = document.getElementById('registration-submit');
+    const receiptUrl = document.getElementById('payment-receipt-url')?.value;
+    const isUploading = document.getElementById('payment-receipt')?.dataset.uploading === 'true';
+    if (!form || !submitButton || form.dataset.submitting === 'true') return;
+    submitButton.disabled = !form.checkValidity() || !receiptUrl || isUploading;
+}
+
+function resetReceiptEvidence() {
+    const receiptInput = document.getElementById('payment-receipt');
+    const receiptUrl = document.getElementById('payment-receipt-url');
+    const fileName = document.getElementById('receipt-file-name');
+    receiptUploadToken += 1;
+    if (receiptInput) {
+        receiptInput.value = '';
+        receiptInput.dataset.uploading = '';
+    }
+    if (receiptUrl) receiptUrl.value = '';
+    if (fileName) {
+        fileName.textContent = '';
+        fileName.classList.add('hidden');
+    }
+    setReceiptStatus('', '');
+    updateRegistrationSubmitState();
+}
+
+async function uploadPaymentReceipt(file) {
+    const receiptInput = document.getElementById('payment-receipt');
+    const receiptUrl = document.getElementById('payment-receipt-url');
+    const fileName = document.getElementById('receipt-file-name');
+    const uploadToken = ++receiptUploadToken;
+    receiptUrl.value = '';
+    receiptInput.dataset.uploading = 'true';
+    fileName.textContent = `Selected evidence: ${file.name}`;
+    fileName.classList.remove('hidden');
+    setReceiptStatus('Uploading receipt evidence…', 'uploading');
+    updateRegistrationSubmitState();
+
+    const uploadData = new FormData();
+    uploadData.append('file', file);
+    uploadData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+    try {
+        const response = await fetch(CLOUDINARY_UPLOAD_URL, { method: 'POST', body: uploadData });
+        const data = await response.json();
+        if (!response.ok || !data.secure_url || !data.secure_url.startsWith('https://res.cloudinary.com/')) {
+            throw new Error(data.error?.message || 'Cloudinary did not return a valid receipt URL.');
+        }
+        if (uploadToken !== receiptUploadToken) return;
+        receiptUrl.value = data.secure_url;
+        setReceiptStatus('Upload successful — receipt evidence secured.', 'success');
+    } catch (error) {
+        if (uploadToken !== receiptUploadToken) return;
+        receiptUrl.value = '';
+        setReceiptStatus('Receipt upload failed. Please select the image and try again.', 'error');
+    } finally {
+        if (uploadToken === receiptUploadToken) {
+            receiptInput.dataset.uploading = '';
+            updateRegistrationSubmitState();
+        }
+}
+}
 
 function openCodeSprintRegistration() {
     playClickSound();
@@ -400,7 +483,10 @@ function openCodeSprintRegistration() {
     document.getElementById('registration-form-panel').classList.remove('hidden');
     document.getElementById('registration-success').classList.add('hidden');
     document.getElementById('registration-error').classList.add('hidden');
-    if (form && !form.dataset.submitting) form.reset();
+    if (form && !form.dataset.submitting) {
+        form.reset();
+        resetReceiptEvidence();
+    }
     updateDuoFields();
     document.getElementById('register-modal').classList.remove('hidden');
     if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -426,6 +512,29 @@ function showRegistrationError(message) {
 
 document.addEventListener('change', (event) => {
     if (event.target.matches('input[name="entry.856098371"]')) updateDuoFields();
+    if (event.target.id === 'payment-receipt') {
+        const file = event.target.files?.[0];
+        if (!file) {
+            resetReceiptEvidence();
+            return;
+        }
+        if (!RECEIPT_IMAGE_TYPES.has(file.type)) {
+            event.target.value = '';
+            document.getElementById('payment-receipt-url').value = '';
+            setReceiptStatus('Only JPG, JPEG, PNG, and WEBP payment receipts are accepted.', 'error');
+            updateRegistrationSubmitState();
+            return;
+        }
+        uploadPaymentReceipt(file);
+    }
+});
+
+document.addEventListener('input', (event) => {
+    if (event.target.closest('#codesprint-registration-form')) updateRegistrationSubmitState();
+});
+
+document.addEventListener('change', (event) => {
+    if (event.target.closest('#codesprint-registration-form')) updateRegistrationSubmitState();
 });
 
 document.addEventListener('submit', async (event) => {
@@ -439,17 +548,25 @@ document.addEventListener('submit', async (event) => {
         showRegistrationError('Please complete every required field before filing your dossier.');
         return;
     }
+    const receiptUrl = document.getElementById('payment-receipt-url').value;
+    if (!receiptUrl || document.getElementById('payment-receipt').dataset.uploading === 'true') {
+        showRegistrationError('Upload a successful payment receipt before completing registration.');
+        updateRegistrationSubmitState();
+        return;
+    }
     if (form.dataset.submitting === 'true') return;
 
     form.dataset.submitting = 'true';
     submitButton.disabled = true;
-    submitButton.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i><span>TRANSMITTING DOSSIER…</span>';
+    submitButton.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i><span>SUBMITTING CASE FILE…</span>';
     if (typeof lucide !== 'undefined') lucide.createIcons();
     try {
         // Google Forms blocks cross-origin response reads. no-cors sends the
         // validated payload while retaining this native confirmation screen.
-        await fetch(GOOGLE_FORM_RESPONSE_URL, { method: 'POST', mode: 'no-cors', body: new FormData(form) });
+        const submissionData = new FormData(form);
+        await fetch(GOOGLE_FORM_RESPONSE_URL, { method: 'POST', mode: 'no-cors', body: submissionData });
         form.reset();
+        resetReceiptEvidence();
         updateDuoFields();
         document.getElementById('registration-form-panel').classList.add('hidden');
         document.getElementById('registration-success').classList.remove('hidden');
@@ -459,7 +576,8 @@ document.addEventListener('submit', async (event) => {
     } finally {
         form.dataset.submitting = '';
         submitButton.disabled = false;
-        submitButton.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i><span>SUBMIT CASE DOSSIER</span>';
+        submitButton.innerHTML = '<i data-lucide="lock-keyhole" class="w-4 h-4"></i><span>COMPLETE REGISTRATION</span>';
+        updateRegistrationSubmitState();
         if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 });

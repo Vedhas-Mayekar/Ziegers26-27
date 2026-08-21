@@ -27,6 +27,23 @@ body {
 .team-choice:has(input:checked) { border-color: #D97706; color: #FBBF24; }
 .declaration-choice input, .team-choice input { accent-color: #DC2626; margin-top: 0.1rem; }
 
+/* Payment evidence is presented as a compact case-file insert within registration. */
+.payment-dossier { background: linear-gradient(135deg, rgba(217, 119, 6, 0.08), rgba(9, 8, 7, 0.15)); }
+.payment-qr-wrap { display: flex; flex-direction: column; align-items: center; gap: 0.55rem; padding: 0.7rem; background: #fff; border: 2px solid #D97706; border-radius: 0.35rem; box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.12); }
+.payment-qr { display: block; width: min(100%, 180px); height: auto; background: #fff; image-rendering: auto; }
+.payment-qr-wrap span { color: #171411; font-weight: 700; text-align: center; }
+.receipt-picker { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.55rem; padding: 0.65rem 0.85rem; color: #FBBF24; background: #090807; border: 1px dashed #D97706; border-radius: 0.25rem; font-weight: 700; font-size: 0.72rem; letter-spacing: 0.06em; cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
+.receipt-picker:hover, .receipt-picker:focus-within { color: #fff; background: rgba(220, 38, 38, 0.15); border-color: #DC2626; }
+.receipt-status { padding: 0.65rem 0.75rem; border: 1px solid #3D3730; border-radius: 0.25rem; font-size: 0.72rem; }
+.receipt-status.is-uploading { color: #FBBF24; border-color: rgba(217, 119, 6, 0.65); background: rgba(217, 119, 6, 0.1); }
+.receipt-status.is-success { color: #bbf7d0; border-color: rgba(74, 222, 128, 0.65); background: rgba(22, 101, 52, 0.18); }
+.receipt-status.is-error { color: #fecaca; border-color: rgba(220, 38, 38, 0.65); background: rgba(127, 29, 29, 0.22); }
+
+@media (max-width: 639px) {
+    .payment-qr-wrap { max-width: 220px; margin: 0 auto; }
+    .payment-qr { width: 180px; }
+}
+
 /* Police Tape Animation */
 .police-tape {
     background: repeating-linear-gradient(

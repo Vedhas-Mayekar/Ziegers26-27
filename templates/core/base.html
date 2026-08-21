@@ -190,8 +190,8 @@
                             <label class="block text-parchment-300">Email Address *<input name="entry.2062888114" type="email" required autocomplete="email" placeholder="you@example.com" class="registration-input mt-1"></label>
                             <label class="block text-parchment-300">Contact Number *<input name="entry.1574312050" type="tel" required inputmode="numeric" pattern="[0-9]{10}" autocomplete="tel" placeholder="10-digit mobile number" class="registration-input mt-1"></label>
                             <label class="block text-parchment-300">College Name *<input name="entry.362793320" type="text" required autocomplete="organization" placeholder="Your college" class="registration-input mt-1"></label>
-                            <label class="block text-parchment-300">Course / Branch *<input name="entry.1231319868" type="text" required placeholder="e.g. Computer Science" class="registration-input mt-1"></label>
-                            <label class="block text-parchment-300">Current Year *<input name="entry.748003842" type="text" required placeholder="e.g. TY BSc IT" class="registration-input mt-1"></label>
+                            <label class="block text-parchment-300">Current Year *<input name="entry.1231319868" type="text" required placeholder="e.g. TY BSc IT" class="registration-input mt-1"></label>
+                            <label class="block text-parchment-300">Course / Branch *<input name="entry.748003842" type="text" required placeholder="e.g. Computer Science" class="registration-input mt-1"></label>
                         </div>
                         <label class="block text-parchment-300">College ID / Payment Reference *<input name="entry.903896828" type="text" required placeholder="Enter your college ID or payment reference" class="registration-input mt-1"></label>
                     </fieldset>
@@ -200,9 +200,9 @@
                         <label class="block text-parchment-300">Full Name *<input name="entry.81471823" type="text" autocomplete="name" placeholder="Team member name" class="registration-input mt-1 duo-required"></label>
                         <label class="block text-parchment-300">Email Address *<input name="entry.1532751651" type="email" autocomplete="email" placeholder="member@example.com" class="registration-input mt-1 duo-required"></label>
                         <label class="block text-parchment-300">Contact Number *<input name="entry.254911826" type="tel" inputmode="numeric" pattern="[0-9]{10}" autocomplete="tel" placeholder="10-digit mobile number" class="registration-input mt-1 duo-required"></label>
-                        <label class="block text-parchment-300">College Name *<input name="entry.1495051927" type="text" autocomplete="organization" placeholder="Team member college" class="registration-input mt-1 duo-required"></label>
+                        <label class="block text-parchment-300">Current Year *<input name="entry.1495051927" type="text" placeholder="e.g. TY BSc IT" class="registration-input mt-1 duo-required"></label>
                         <label class="block text-parchment-300">Course / Branch *<input name="entry.1867169457" type="text" placeholder="e.g. Computer Science" class="registration-input mt-1 duo-required"></label>
-                        <label class="block text-parchment-300">Current Year *<input name="entry.1453742885" type="text" placeholder="e.g. TY BSc IT" class="registration-input mt-1 duo-required"></label>
+                        <label class="block text-parchment-300">College Name *<input name="entry.1453742885" type="text" autocomplete="organization" placeholder="Team member college" class="registration-input mt-1 duo-required"></label>
                     </div></fieldset>
                     <fieldset class="space-y-3 border-t border-noir-700 pt-5"><legend class="text-stamp-gold uppercase tracking-widest font-bold">// Declaration</legend>
                         <label class="declaration-choice"><input type="checkbox" name="entry.1205711899" value="I confirm that the information provided is accurate." required><span>I confirm that the information provided is accurate.</span></label>
@@ -210,11 +210,29 @@
                         <label class="declaration-choice"><input type="checkbox" name="entry.1205711899" value="I understand that the problem statement will be revealed at the beginning of the hackathon." required><span>I understand that the problem statement will be revealed at the beginning of the hackathon.</span></label>
                         <label class="declaration-choice"><input type="checkbox" name="entry.973523949" value="I acknowledge that bringing a college ID is mandatory for entry, college dress code applies, and fees are non-refundable." required><span>I acknowledge that bringing a college ID is mandatory for entry, college dress code applies, and fees are non-refundable.</span></label>
                     </fieldset>
+                    <fieldset class="payment-dossier space-y-4 border-t border-noir-700 pt-5"><legend class="text-stamp-gold uppercase tracking-widest font-bold">// Payment Evidence</legend>
+                        <input id="payment-receipt-url" name="entry.983626929" type="hidden" required>
+                        <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_190px] gap-4 items-center">
+                            <div class="space-y-3">
+                                <span class="stamp-mark px-2 py-0.5 text-[10px] font-bold uppercase typewriter-text">PAYMENT REQUIRED</span>
+                                <p class="text-sm text-parchment-200 leading-relaxed">Scan &amp; Pay <strong class="text-stamp-gold">₹449</strong> using GPay / UPI, then upload the payment receipt as evidence.</p>
+                                <label for="payment-receipt" class="receipt-picker"><i data-lucide="upload-cloud" class="w-4 h-4"></i><span>UPLOAD PAYMENT RECEIPT</span></label>
+                                <input id="payment-receipt" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" class="sr-only" aria-describedby="payment-receipt-help">
+                                <p id="payment-receipt-help" class="text-[10px] text-parchment-400">JPG, JPEG, PNG, or WEBP only. You may replace the receipt before filing.</p>
+                                <p id="receipt-file-name" class="hidden text-[11px] text-parchment-200 break-all"></p>
+                                <p id="receipt-upload-status" class="hidden receipt-status" role="status" aria-live="polite"></p>
+                            </div>
+                            <div class="payment-qr-wrap">
+                                <img src="{% static 'images/gpay-upi-qr.png' %}" alt="GPay / UPI payment QR code" class="payment-qr" width="180" height="180">
+                                <span class="text-[10px] text-parchment-400 typewriter-text">SCAN &amp; PAY ₹449</span>
+                            </div>
+                        </div>
+                    </fieldset>
                     <p id="registration-error" class="hidden rounded border border-stamp-red/60 bg-stamp-red/10 p-3 text-parchment-200" role="alert"></p>
-                    <button id="registration-submit" type="submit" class="w-full py-3 bg-stamp-red hover:bg-red-700 disabled:bg-noir-700 disabled:text-parchment-400 text-white font-extrabold text-xs uppercase tracking-wider rounded border border-red-500 transition-all shadow-lg flex items-center justify-center gap-2"><i data-lucide="send" class="w-4 h-4"></i><span>SUBMIT CASE DOSSIER</span></button>
+                    <button id="registration-submit" type="submit" disabled class="w-full py-3 bg-stamp-red hover:bg-red-700 disabled:bg-noir-700 disabled:text-parchment-400 text-white font-extrabold text-xs uppercase tracking-wider rounded border border-red-500 transition-all shadow-lg flex items-center justify-center gap-2"><i data-lucide="lock-keyhole" class="w-4 h-4"></i><span>COMPLETE REGISTRATION</span></button>
                 </form>
             </div>
-            <div id="registration-success" class="hidden py-8 text-center space-y-4" role="status" aria-live="polite"><div class="w-16 h-16 mx-auto rounded-full border-2 border-stamp-gold bg-stamp-gold/10 flex items-center justify-center text-stamp-gold"><i data-lucide="badge-check" class="w-8 h-8"></i></div><span class="stamp-mark px-3 py-1 text-xs font-bold uppercase typewriter-text">CASE FILED</span><h3 class="text-2xl font-black title-cinzel text-white">DOSSIER RECEIVED</h3><p class="max-w-md mx-auto text-xs text-parchment-300 typewriter-text">Your CodeSprint registration has been transmitted. The operations team will contact you using the details provided.</p><button type="button" onclick="closeRegisterModal()" class="px-5 py-2.5 bg-noir-800 hover:bg-noir-700 text-parchment-200 font-bold text-xs uppercase tracking-wider rounded border border-noir-600 transition-all">CLOSE DOSSIER</button></div>
+            <div id="registration-success" class="hidden py-8 text-center space-y-4" role="status" aria-live="polite"><div class="w-16 h-16 mx-auto rounded-full border-2 border-stamp-gold bg-stamp-gold/10 flex items-center justify-center text-stamp-gold"><i data-lucide="badge-check" class="w-8 h-8"></i></div><span class="stamp-mark px-3 py-1 text-xs font-bold uppercase typewriter-text">CASE FILE CREATED ✓</span><h3 class="text-2xl font-black title-cinzel text-white">REGISTRATION SUCCESSFUL</h3><p class="max-w-md mx-auto text-xs text-parchment-300 typewriter-text">Your CodeSprint dossier and payment evidence have been recorded. The operations team will contact you using the details provided.</p><button type="button" onclick="closeRegisterModal()" class="px-5 py-2.5 bg-noir-800 hover:bg-noir-700 text-parchment-200 font-bold text-xs uppercase tracking-wider rounded border border-noir-600 transition-all">CLOSE DOSSIER</button></div>
         </div>
     </div>
 
