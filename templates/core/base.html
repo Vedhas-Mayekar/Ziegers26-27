@@ -21,8 +21,11 @@
         // Apply the saved torch preference before the page paints so moving
         // between pages never resets or flashes the opposite light state.
         try {
+            if (localStorage.getItem('ziegers_torch_active') === null) {
+                localStorage.setItem('ziegers_torch_active', 'true');
+            }
             document.documentElement.classList.toggle(
-                'torch-dark', localStorage.getItem('ziegers_torch_active') !== 'false'
+                'torch-dark', localStorage.getItem('ziegers_torch_active') === 'true'
             );
         } catch (error) {
             document.documentElement.classList.add('torch-dark');

@@ -253,6 +253,11 @@ window.addEventListener('storage', (event) => {
         applyTorchState();
     }
 });
+window.addEventListener('pageshow', () => {
+    // Covers browser back/forward cache restores, which do not re-run scripts.
+    torchActive = getInitialTorchState();
+    applyTorchState();
+});
 
 // Initialize dark mode on page load
 applyTorchState();
