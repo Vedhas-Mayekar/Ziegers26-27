@@ -397,6 +397,7 @@ const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/npptddim/image/up
 const CLOUDINARY_UPLOAD_PRESET = 'ziegers_decipher_payment_receipts';
 const RECEIPT_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 let receiptUploadToken = 0;
+let nativeGoogleSubmissionPending = false;
 
 function openGeneralRegistration() {
     openCodeSprintRegistration();
@@ -561,23 +562,49 @@ document.addEventListener('submit', async (event) => {
     submitButton.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i><span>SUBMITTING CASE FILE…</span>';
     if (typeof lucide !== 'undefined') lucide.createIcons();
     try {
-        // Google Forms blocks cross-origin response reads. no-cors sends the
-        // validated payload while retaining this native confirmation screen.
-        const submissionData = new FormData(form);
-        await fetch(GOOGLE_FORM_RESPONSE_URL, { method: 'POST', mode: 'no-cors', body: submissionData });
-        form.reset();
-        resetReceiptEvidence();
-        updateDuoFields();
-        document.getElementById('registration-form-panel').classList.add('hidden');
-        document.getElementById('registration-success').classList.remove('hidden');
-        playClickSound();
+        console.info('Submitting CodeSprint registration', {
+            fullName: form.elements['entry.1108326818'].value,
+            email: form.elements['entry.2062888114'].value,
+            college: form.elements['entry.362793320'].value,
+            participation: form.elements['entry.856098371'].value,
+            receiptUrl,
+        });
+        // A native form post is required: fetch(no-cors) resolves even when
+        // Google rejects the request. The hidden target keeps Google UI out of
+        // view while submitting the exact form fields, including receipt URL.
+        nativeGoogleSubmissionPending = true;
+        form.submit();
     } catch (err) {
         showRegistrationError('Transmission could not be completed. Please check your connection and try again.');
-    } finally {
+        nativeGoogleSubmissionPending = false;
         form.dataset.submitting = '';
         submitButton.disabled = false;
         submitButton.innerHTML = '<i data-lucide="lock-keyhole" class="w-4 h-4"></i><span>COMPLETE REGISTRATION</span>';
         updateRegistrationSubmitState();
         if (typeof lucide !== 'undefined') lucide.createIcons();
     }
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+    const responseFrame = document.getElementById('googleFormSubmitFrame');
+    if (!responseFrame) return;
+    responseFrame.addEventListener('load', () => {
+        if (!nativeGoogleSubmissionPending) return;
+        nativeGoogleSubmissionPending = false;
+        const form = getRegistrationForm();
+        const submitButton = document.getElementById('registration-submit');
+        // Cross-origin restrictions prevent reading Google's response body;
+        // importantly, this is now a delivery notification—not a false claim
+        // that a Sheet row was created.
+        form.reset();
+        resetReceiptEvidence();
+        updateDuoFields();
+        form.dataset.submitting = '';
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i data-lucide="lock-keyhole" class="w-4 h-4"></i><span>COMPLETE REGISTRATION</span>';
+        document.getElementById('registration-form-panel').classList.add('hidden');
+        document.getElementById('registration-success').classList.remove('hidden');
+        playClickSound();
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    });
 });
