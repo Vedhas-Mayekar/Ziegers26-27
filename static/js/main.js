@@ -347,9 +347,9 @@ function openCaseModal(caseKey) {
                     <strong>Contact Officers:</strong><br>
                     ${data.officers.map(o => `${o.name} (<a href="tel:${o.phone}" class="text-stamp-gold hover:underline">${o.phone}</a>)`).join(' • ')}
                 </div>
-                <button onclick="closeCaseModal(); openRegisterModal('${data.title}', ${data.fee_num});" class="w-full sm:w-auto px-6 py-2.5 bg-stamp-red hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider rounded border border-red-500">
-                    REGISTER NOW
-                </button>
+                ${caseKey === 'codesprint'
+                    ? '<button onclick="closeCaseModal(); openCodeSprintRegistration();" class="w-full sm:w-auto px-6 py-2.5 bg-stamp-red hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider rounded border border-red-500">REGISTER NOW</button>'
+                    : '<span class="text-xs typewriter-text text-parchment-400">Registration details available from the event officers.</span>'}
             </div>
         </div>
     `;
@@ -366,10 +366,7 @@ function closeCaseModal() {
 }
 
 function openRegisterModal(title, price) {
-    playClickSound();
-    document.getElementById('reg-event-title').innerText = title;
-    document.getElementById('reg-fee-display').innerText = `₹${price}`;
-    document.getElementById('register-modal').classList.remove('hidden');
+    openCodeSprintRegistration();
 }
 
 function closeRegisterModal() {
@@ -377,21 +374,74 @@ function closeRegisterModal() {
     document.getElementById('register-modal').classList.add('hidden');
 }
 
-function handleRegistrationSubmit(e) {
-    e.preventDefault();
+const GOOGLE_FORM_RESPONSE_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSezCly9RvWmHngTWN-t1jrRZSojNixqyosRR6ArE0CftdojPw/formResponse';
+
+function openCodeSprintRegistration() {
     playClickSound();
-
-    const name = document.getElementById('reg-name').value;
-    const phone = document.getElementById('reg-phone').value;
-    const college = document.getElementById('reg-college').value;
-
-    const token = "CASE-2026-" + Math.floor(1000 + Math.random() * 9000);
-    alert(`🎉 REGISTRATION DOSSIER CREATED!\n\nYour Case Ticket: ${token}\n\nPlease proceed to complete payment with the event officer or via official Google Form.`);
-
-    // Reset the form after successful submission
-    document.getElementById('reg-name').value = '';
-    document.getElementById('reg-phone').value = '';
-    document.getElementById('reg-college').value = '';
-
-    closeRegisterModal();
+    const form = document.getElementById('codesprint-registration-form');
+    document.getElementById('registration-form-panel').classList.remove('hidden');
+    document.getElementById('registration-success').classList.add('hidden');
+    document.getElementById('registration-error').classList.add('hidden');
+    if (form && !form.dataset.submitting) form.reset();
+    updateDuoFields();
+    document.getElementById('register-modal').classList.remove('hidden');
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 }
+
+function updateDuoFields() {
+    const isDuo = document.querySelector('input[name="entry.856098371"]:checked')?.value === 'Duo';
+    const duoFields = document.getElementById('duo-fields');
+    if (!duoFields) return;
+    duoFields.classList.toggle('hidden', !isDuo);
+    duoFields.querySelectorAll('.duo-required').forEach((input) => {
+        input.required = isDuo;
+        input.disabled = !isDuo;
+        if (!isDuo) input.value = '';
+    });
+}
+
+function showRegistrationError(message) {
+    const error = document.getElementById('registration-error');
+    error.textContent = message;
+    error.classList.remove('hidden');
+}
+
+document.addEventListener('change', (event) => {
+    if (event.target.matches('input[name="entry.856098371"]')) updateDuoFields();
+});
+
+document.addEventListener('submit', async (event) => {
+    const form = event.target;
+    if (form.id !== 'codesprint-registration-form') return;
+    event.preventDefault();
+    const submitButton = document.getElementById('registration-submit');
+    document.getElementById('registration-error').classList.add('hidden');
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        showRegistrationError('Please complete every required field before filing your dossier.');
+        return;
+    }
+    if (form.dataset.submitting === 'true') return;
+
+    form.dataset.submitting = 'true';
+    submitButton.disabled = true;
+    submitButton.innerHTML = '<i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i><span>TRANSMITTING DOSSIER…</span>';
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+    try {
+        // Google Forms blocks cross-origin response reads. no-cors sends the
+        // validated payload while retaining this native confirmation screen.
+        await fetch(GOOGLE_FORM_RESPONSE_URL, { method: 'POST', mode: 'no-cors', body: new FormData(form) });
+        form.reset();
+        updateDuoFields();
+        document.getElementById('registration-form-panel').classList.add('hidden');
+        document.getElementById('registration-success').classList.remove('hidden');
+        playClickSound();
+    } catch (err) {
+        showRegistrationError('Transmission could not be completed. Please check your connection and try again.');
+    } finally {
+        form.dataset.submitting = '';
+        submitButton.disabled = false;
+        submitButton.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i><span>SUBMIT CASE DOSSIER</span>';
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+});

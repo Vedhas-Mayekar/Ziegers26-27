@@ -89,9 +89,9 @@
                     </button>
 
                     <!-- CTA Button (Desktop only — mobile has Register in bottom bar) -->
-                    <a href="https://forms.gle/bDmxNrk2jL5XH2V99" target="_blank" rel="noopener noreferrer" class="hidden md:flex px-4 py-2 bg-stamp-red hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded border border-red-500/50 shadow-lg shadow-red-900/40 transition-all items-center gap-2 whitespace-nowrap">
+                    <button type="button" onclick="openCodeSprintRegistration()" class="hidden md:flex px-4 py-2 bg-stamp-red hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded border border-red-500/50 shadow-lg shadow-red-900/40 transition-all items-center gap-2 whitespace-nowrap">
                         <i data-lucide="file-plus" class="w-4 h-4"></i> File Case / Register
-                    </a>
+                    </button>
                 </div>
             </div>
 
@@ -105,10 +105,10 @@
                     <i data-lucide="trophy" class="w-4 h-4 text-stamp-gold shrink-0"></i>
                     <span class="text-[9px] font-bold uppercase tracking-wider typewriter-text">Results</span>
                 </a>
-                <a href="https://forms.gle/bDmxNrk2jL5XH2V99" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-0 flex flex-col items-center justify-center gap-1 px-2 py-1.5 bg-stamp-red hover:bg-red-700 border border-red-500/50 rounded text-white transition-all">
+                <button type="button" onclick="openCodeSprintRegistration()" class="flex-1 min-w-0 flex flex-col items-center justify-center gap-1 px-2 py-1.5 bg-stamp-red hover:bg-red-700 border border-red-500/50 rounded text-white transition-all">
                     <i data-lucide="file-plus" class="w-4 h-4 shrink-0"></i>
                     <span class="text-[9px] font-bold uppercase tracking-wider typewriter-text">Register</span>
-                </a>
+                </button>
             </div>
         </div>
     </nav>
@@ -154,47 +154,53 @@
         </div>
     </div>
 
-    <!-- MODAL: QUICK REGISTRATION FORM -->
+    <!-- MODAL: CODESPRINT REGISTRATION DOSSIER -->
     <div id="register-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-noir-900 border-2 border-stamp-red rounded-xl max-w-lg w-full p-6 relative shadow-2xl space-y-6">
+        <div class="bg-noir-900 border-2 border-stamp-red rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 relative shadow-2xl space-y-5">
 
             <button onclick="closeRegisterModal()" class="absolute top-4 right-4 p-2 text-parchment-400 hover:text-stamp-red text-xs typewriter-text border border-noir-700 rounded">
                 [CANCEL ✕]
             </button>
 
-            <div class="space-y-1">
-                <span class="stamp-mark px-2 py-0.5 text-[10px] uppercase typewriter-text">CASE REGISTRATION BUREAU</span>
-                <h3 id="reg-event-title" class="text-2xl font-bold title-cinzel text-white">FILE CASE ENTRY</h3>
-                <p class="text-xs text-parchment-400">Complete the form to obtain your official Case Ticket.</p>
+            <div id="registration-form-panel" class="space-y-5">
+                <div class="space-y-1 pr-10">
+                    <span class="stamp-mark px-2 py-0.5 text-[10px] uppercase typewriter-text">CASE REGISTRATION BUREAU</span>
+                    <h3 id="reg-event-title" class="text-2xl font-bold title-cinzel text-white">CODESPRINT 2026 ENTRY</h3>
+                    <p class="text-xs text-parchment-400">File your team dossier. Fields marked * are required.</p>
+                </div>
+                <div class="bg-noir-950 p-3 rounded border border-noir-700 flex justify-between items-center text-sm"><span class="text-parchment-300">Case Entry Fee:</span><strong id="reg-fee-display" class="text-stamp-gold text-lg font-mono font-bold">₹449</strong></div>
+                <form id="codesprint-registration-form" novalidate class="space-y-5 text-xs typewriter-text">
+                    <fieldset class="space-y-3"><legend class="text-stamp-gold uppercase tracking-widest font-bold">// Lead Investigator</legend>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <label class="block text-parchment-300">Full Name *<input name="entry.1108326818" type="text" required autocomplete="name" placeholder="e.g. Rahul Sharma" class="registration-input mt-1"></label>
+                            <label class="block text-parchment-300">Email Address *<input name="entry.2062888114" type="email" required autocomplete="email" placeholder="you@example.com" class="registration-input mt-1"></label>
+                            <label class="block text-parchment-300">Contact Number *<input name="entry.1574312050" type="tel" required inputmode="numeric" pattern="[0-9]{10}" autocomplete="tel" placeholder="10-digit mobile number" class="registration-input mt-1"></label>
+                            <label class="block text-parchment-300">College Name *<input name="entry.362793320" type="text" required autocomplete="organization" placeholder="Your college" class="registration-input mt-1"></label>
+                            <label class="block text-parchment-300">Course / Branch *<input name="entry.1231319868" type="text" required placeholder="e.g. Computer Science" class="registration-input mt-1"></label>
+                            <label class="block text-parchment-300">Current Year *<input name="entry.748003842" type="text" required placeholder="e.g. TY BSc IT" class="registration-input mt-1"></label>
+                        </div>
+                        <label class="block text-parchment-300">College ID / Payment Reference *<input name="entry.903896828" type="text" required placeholder="Enter your college ID or payment reference" class="registration-input mt-1"></label>
+                    </fieldset>
+                    <fieldset class="space-y-3 border-t border-noir-700 pt-5"><legend class="text-stamp-gold uppercase tracking-widest font-bold">// Team Configuration</legend><div class="grid grid-cols-2 gap-3"><label class="team-choice"><input type="radio" name="entry.856098371" value="Solo" required><span>SOLO</span></label><label class="team-choice"><input type="radio" name="entry.856098371" value="Duo" required><span>DUO</span></label></div></fieldset>
+                    <fieldset id="duo-fields" class="hidden space-y-3 border border-stamp-gold/30 bg-noir-950/60 rounded-lg p-4"><legend class="px-1 text-stamp-gold uppercase tracking-widest font-bold">// Second Investigator</legend><div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <label class="block text-parchment-300">Full Name *<input name="entry.81471823" type="text" autocomplete="name" placeholder="Team member name" class="registration-input mt-1 duo-required"></label>
+                        <label class="block text-parchment-300">Email Address *<input name="entry.1532751651" type="email" autocomplete="email" placeholder="member@example.com" class="registration-input mt-1 duo-required"></label>
+                        <label class="block text-parchment-300">Contact Number *<input name="entry.254911826" type="tel" inputmode="numeric" pattern="[0-9]{10}" autocomplete="tel" placeholder="10-digit mobile number" class="registration-input mt-1 duo-required"></label>
+                        <label class="block text-parchment-300">College Name *<input name="entry.1495051927" type="text" autocomplete="organization" placeholder="Team member college" class="registration-input mt-1 duo-required"></label>
+                        <label class="block text-parchment-300">Course / Branch *<input name="entry.1867169457" type="text" placeholder="e.g. Computer Science" class="registration-input mt-1 duo-required"></label>
+                        <label class="block text-parchment-300">Current Year *<input name="entry.1453742885" type="text" placeholder="e.g. TY BSc IT" class="registration-input mt-1 duo-required"></label>
+                    </div></fieldset>
+                    <fieldset class="space-y-3 border-t border-noir-700 pt-5"><legend class="text-stamp-gold uppercase tracking-widest font-bold">// Declaration</legend>
+                        <label class="declaration-choice"><input type="checkbox" name="entry.1205711899" value="I confirm that the information provided is accurate." required><span>I confirm that the information provided is accurate.</span></label>
+                        <label class="declaration-choice"><input type="checkbox" name="entry.1205711899" value="I agree to follow the hackathon rules and code of conduct." required><span>I agree to follow the hackathon rules and code of conduct.</span></label>
+                        <label class="declaration-choice"><input type="checkbox" name="entry.1205711899" value="I understand that the problem statement will be revealed at the beginning of the hackathon." required><span>I understand that the problem statement will be revealed at the beginning of the hackathon.</span></label>
+                        <label class="declaration-choice"><input type="checkbox" name="entry.973523949" value="I acknowledge that bringing a college ID is mandatory for entry, college dress code applies, and fees are non-refundable." required><span>I acknowledge that bringing a college ID is mandatory for entry, college dress code applies, and fees are non-refundable.</span></label>
+                    </fieldset>
+                    <p id="registration-error" class="hidden rounded border border-stamp-red/60 bg-stamp-red/10 p-3 text-parchment-200" role="alert"></p>
+                    <button id="registration-submit" type="submit" class="w-full py-3 bg-stamp-red hover:bg-red-700 disabled:bg-noir-700 disabled:text-parchment-400 text-white font-extrabold text-xs uppercase tracking-wider rounded border border-red-500 transition-all shadow-lg flex items-center justify-center gap-2"><i data-lucide="send" class="w-4 h-4"></i><span>SUBMIT CASE DOSSIER</span></button>
+                </form>
             </div>
-
-            <form onsubmit="handleRegistrationSubmit(event)" class="space-y-4 text-xs typewriter-text">
-                {% csrf_token %}
-                <div>
-                    <label class="block text-parchment-300 mb-1">Lead Detective / Student Name *</label>
-                    <input type="text" id="reg-name" required placeholder="e.g. Rahul Sharma" class="w-full bg-noir-950 border border-noir-700 rounded p-2.5 text-white focus:border-stamp-red outline-none">
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-parchment-300 mb-1">Contact Phone *</label>
-                        <input type="tel" id="reg-phone" required placeholder="10 Digit Mobile" class="w-full bg-noir-950 border border-noir-700 rounded p-2.5 text-white focus:border-stamp-red outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-parchment-300 mb-1">College Name *</label>
-                        <input type="text" id="reg-college" required placeholder="College Campus" class="w-full bg-noir-950 border border-noir-700 rounded p-2.5 text-white focus:border-stamp-red outline-none">
-                    </div>
-                </div>
-
-                <div class="bg-noir-950 p-3 rounded border border-noir-700 flex justify-between items-center text-sm">
-                    <span class="text-parchment-300">Total Entry Fee:</span>
-                    <strong id="reg-fee-display" class="text-stamp-gold text-lg font-mono font-bold">₹0</strong>
-                </div>
-
-                <button type="submit" class="w-full py-3 bg-stamp-red hover:bg-red-700 text-white font-extrabold text-xs uppercase tracking-wider rounded border border-red-500 transition-all shadow-lg">
-                    SUBMIT & GENERATE CASE TOKEN
-                </button>
-            </form>
+            <div id="registration-success" class="hidden py-8 text-center space-y-4" role="status" aria-live="polite"><div class="w-16 h-16 mx-auto rounded-full border-2 border-stamp-gold bg-stamp-gold/10 flex items-center justify-center text-stamp-gold"><i data-lucide="badge-check" class="w-8 h-8"></i></div><span class="stamp-mark px-3 py-1 text-xs font-bold uppercase typewriter-text">CASE FILED</span><h3 class="text-2xl font-black title-cinzel text-white">DOSSIER RECEIVED</h3><p class="max-w-md mx-auto text-xs text-parchment-300 typewriter-text">Your CodeSprint registration has been transmitted. The operations team will contact you using the details provided.</p><button type="button" onclick="closeRegisterModal()" class="px-5 py-2.5 bg-noir-800 hover:bg-noir-700 text-parchment-200 font-bold text-xs uppercase tracking-wider rounded border border-noir-600 transition-all">CLOSE DOSSIER</button></div>
         </div>
     </div>
 

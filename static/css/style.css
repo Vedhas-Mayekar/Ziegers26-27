@@ -18,6 +18,15 @@ body {
     font-family: 'Cinzel', serif;
 }
 
+/* CodeSprint registration dossier — built from the existing noir form language. */
+.registration-input { width: 100%; padding: 0.625rem; color: #fff; background: #090807; border: 1px solid #3D3730; border-radius: 0.25rem; outline: none; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+.registration-input:focus { border-color: #DC2626; box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.18); }
+.registration-input:invalid:not(:placeholder-shown) { border-color: #DC2626; }
+.team-choice, .declaration-choice { display: flex; align-items: flex-start; gap: 0.6rem; color: #E6D5B8; }
+.team-choice { justify-content: center; padding: 0.75rem; border: 1px solid #3D3730; border-radius: 0.25rem; background: #090807; font-weight: 700; letter-spacing: 0.08em; }
+.team-choice:has(input:checked) { border-color: #D97706; color: #FBBF24; }
+.declaration-choice input, .team-choice input { accent-color: #DC2626; margin-top: 0.1rem; }
+
 /* Police Tape Animation */
 .police-tape {
     background: repeating-linear-gradient(
